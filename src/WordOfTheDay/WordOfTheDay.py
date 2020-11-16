@@ -30,14 +30,14 @@ class WordOfTheDay():
 
     def get_word_title(self, word_item_head):
         title = word_item_head.find(
-            "div", class_="otd-item-headword__word").text
+            "div", class_="otd-item-headword__word").text.strip()
         return title
 
     def get_word_pronounce(self, word_item_head):
         pronounce_div = word_item_head.find(
             "div", class_="otd-item-headword__pronunciation")
         pronounce_div = pronounce_div.find("div")
-        pronounce = pronounce_div.text
+        pronounce = pronounce_div.text.strip()
         pronounce_audio = pronounce_div.find(
             "a", class_="otd-item-headword__pronunciation-audio")
         pronounce_audio = pronounce_audio["href"]
@@ -47,8 +47,8 @@ class WordOfTheDay():
     def get_word_pos_and_meaning(self, word_item_head):
         pos_div = word_item_head.find("div", class_="otd-item-headword__pos")
         pos_list = pos_div.find_all("p")
-        pos = pos_list[0].text
-        meaning = pos_list[1].text
+        pos = pos_list[0].text.strip()
+        meaning = pos_list[-1].text.strip()
 
         return pos, meaning
 
@@ -58,25 +58,7 @@ class WordOfTheDay():
         pronounce, pronounce_audio = self.get_word_pronounce(word_item_head)
         pos, meaning = self.get_word_pos_and_meaning(word_item_head)
 
-        return {
-            "title": title,
-            "pronounce": pronounce,
-            "pronounce_audio": pronounce_audio,
-            "pos": pos,
-            "meaning": meaning
-        }
-
-    def create_word_item(self, word_item_dict):
-        title = word_item_dict["title"]
-        pronounce = word_item_dict["pronounce"]
-        pronounce_audio = word_item_dict["pronounce_audio"]
-        pos = word_item_dict["pos"]
-        meaning = word_item_dict["meaning"]
-
         return WordItem(title, pronounce, pronounce_audio, pos, meaning)
-
-    def create_word_items(self, word_items_dict):
-        return [self.create_word_item(word_dict) for word_dict in word_items_dict]
 
     def create_words_list(self, soup):
         words_list = []
@@ -84,3 +66,15 @@ class WordOfTheDay():
         words_list = [self.get_word_from_wrapper(
             word_wrap) for word_wrap in word_item_wrappers]
         return words_list
+
+    def get_words_of_the_day(self):
+        soup = self.get_soup(self.BASE_URL)
+        words_list = self.create_words_list(soup)
+        return words_list[:self.num_words]
+
+
+
+wod = WordOfTheDay(num_words=7)
+words_list = wod.get_words_of_the_day()
+for word in words_list:
+    print(word)
