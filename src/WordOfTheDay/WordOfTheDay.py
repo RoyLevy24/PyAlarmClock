@@ -1,3 +1,4 @@
+import random
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
@@ -10,6 +11,7 @@ class WordOfTheDay():
 
     def __init__(self, num_words=1):
         self.BASE_URL = "https://www.dictionary.com/e/word-of-the-day/"
+        self.WORDS_PER_PAGE = 7
         self.num_words = num_words
 
     def get_soup(self, url):
@@ -24,9 +26,10 @@ class WordOfTheDay():
         except HTTPError as e:
             return None
         try:
-            return BeautifulSoup(html.read(), "html.parser")
+            return BeautifulSoup(html.read(), "html.parser", from_encoding="utf-8")
         except AttributeError as e:
             return None
+    
 
     def get_word_title(self, word_item_head):
         title = word_item_head.find(
@@ -70,11 +73,24 @@ class WordOfTheDay():
     def get_words_of_the_day(self):
         soup = self.get_soup(self.BASE_URL)
         words_list = self.create_words_list(soup)
-        return words_list[:self.num_words]
+        remaining_words = self.num_words - self.WORDS_PER_PAGE
+
+        while soup != None and remaining_words > 0:
+            next_page = soup.find("a", class_="otd-item__load-more")["href"]
+            soup = self.get_soup(next_page)
+            words_list += self.create_words_list(soup)
+            remaining_words -= self.WORDS_PER_PAGE
+
+        words_list = words_list[:self.num_words]
+        random.shuffle(words_list)
+        return words_list
 
 
 
-wod = WordOfTheDay(num_words=7)
+wod = WordOfTheDay(num_words=15)
 words_list = wod.get_words_of_the_day()
-for word in words_list:
-    print(word)
+for i in range(len(words_list)):
+    try:
+        print(words_list[i])
+    except:
+        print(i)
