@@ -8,7 +8,7 @@ from scipy.spatial import distance as dist
 
 class OpenEyesDetect():
 
-    def __init__(self, camera_num=1, ear_threshold=0.31, consec_frames_threshold=870):
+    def __init__(self, camera_num=1, ear_threshold=0.31, consec_frames_threshold=100):
         self.PREDICTOR_PATH = "./src/OpenEyesDetection/assets/predictors/face_landmarks_predictor.dat"
         self.camera_num = camera_num
         self.ear_threshold = ear_threshold
@@ -41,7 +41,7 @@ class OpenEyesDetect():
         print("[INFO] starting video stream thread...")
         print("[INFO] print q to quit...")
 
-        vs = VideoStream(1).start()
+        vs = VideoStream(self.camera_num).start()
 
         while open_eyes_frames_num <= self.consec_frames_threshold:
             frame = vs.read()
