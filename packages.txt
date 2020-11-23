@@ -1,0 +1,7 @@
+scipy
+pyaudio
+imutils
+opencv
+cmake
+face recognition
+dlib
