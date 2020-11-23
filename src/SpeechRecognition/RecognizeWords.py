@@ -5,6 +5,8 @@ import speech_recognition as sr
 
 class RecognizeWords():
 
+    # TODO: Need to be singleton
+
     def __init__(self):
         self.recognizer = sr.Recognizer()
         self.microphone = sr.Microphone()

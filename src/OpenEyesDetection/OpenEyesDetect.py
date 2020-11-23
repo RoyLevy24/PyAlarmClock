@@ -8,11 +8,25 @@ from scipy.spatial import distance as dist
 
 class OpenEyesDetect():
 
+    # TODO: given a time calculate frame per seconds of device
+    __instance = None
+
+    @staticmethod
+    def getInstance():
+        if OpenEyesDetect.__instance == None:
+            OpenEyesDetect()
+        return OpenEyesDetect.__instance
+    
     def __init__(self, camera_num=1, ear_threshold=0.31, consec_frames_threshold=100):
-        self.PREDICTOR_PATH = "./src/OpenEyesDetection/assets/predictors/face_landmarks_predictor.dat"
-        self.camera_num = camera_num
-        self.ear_threshold = ear_threshold
-        self.consec_frames_threshold = consec_frames_threshold
+        if OpenEyesDetect.__instance != None:
+            raise Exception("This class is a singleton!")
+        else:
+            self.PREDICTOR_PATH = "./src/OpenEyesDetection/assets/predictors/face_landmarks_predictor.dat"
+            self.camera_num = camera_num
+            self.ear_threshold = ear_threshold
+            self.consec_frames_threshold = consec_frames_threshold
+            OpenEyesDetect.__instance = self  
+
 
     def get_eye_aspect_ratio(self, eye):
         # computes the euclidean distance between
@@ -86,5 +100,5 @@ class OpenEyesDetect():
 
 
 if __name__ == '__main__':
-    bd = OpenEyesDetect()
+    bd = OpenEyesDetect.getInstance()
     bd.detect_open_eyes()
