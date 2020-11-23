@@ -1,10 +1,10 @@
-from scipy.spatial import distance as dist
-from imutils.video import VideoStream
-from imutils import face_utils
-import imutils
-import time
-import dlib
 import cv2
+import dlib
+import imutils
+from imutils import face_utils
+from imutils.video import VideoStream
+from scipy.spatial import distance as dist
+
 
 class OpenEyesDetect():
 
@@ -13,7 +13,7 @@ class OpenEyesDetect():
         self.camera_num = camera_num
         self.ear_threshold = ear_threshold
         self.consec_frames_threshold = consec_frames_threshold
-    
+
     def get_eye_aspect_ratio(self, eye):
         # computes the euclidean distance between
         # vertical eye landmarks
@@ -35,7 +35,8 @@ class OpenEyesDetect():
         predictor = dlib.shape_predictor(self.PREDICTOR_PATH)
 
         (left_start, left_end) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
-        (right_start, right_end) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
+        (right_start,
+         right_end) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
 
         print("[INFO] starting video stream thread...")
         print("[INFO] print q to quit...")
@@ -63,17 +64,17 @@ class OpenEyesDetect():
                 left_eye_hull = cv2.convexHull(left_eye)
                 right_eye_hull = cv2.convexHull(right_eye)
 
-                cv2.drawContours(frame, [left_eye_hull], -1, (0,255,0), 1)
-                cv2.drawContours(frame, [right_eye_hull], -1, (0,255,0), 1)
+                cv2.drawContours(frame, [left_eye_hull], -1, (0, 255, 0), 1)
+                cv2.drawContours(frame, [right_eye_hull], -1, (0, 255, 0), 1)
 
                 if (ear >= self.ear_threshold):
                     if (open_eyes_frames_num <= self.consec_frames_threshold):
                         open_eyes_frames_num += 1
-                
+
                 cv2.putText(frame, "FR_OPEN_EYES: {}".format(open_eyes_frames_num), (10, 30),
-    			cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
                 cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
-    			cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
             cv2.imshow("Detect Open Eyes", frame)
             key = cv2.waitKey(1) & 0xFF
@@ -84,6 +85,6 @@ class OpenEyesDetect():
         vs.stop()
 
 
-if __name__ == '__main__' :
+if __name__ == '__main__':
     bd = OpenEyesDetect()
     bd.detect_open_eyes()
