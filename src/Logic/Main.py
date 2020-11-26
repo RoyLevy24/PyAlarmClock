@@ -2,26 +2,28 @@ import datetime
 import queue
 import sys
 import threading
-
-sys.path.append("./src/AlarmClock/")
-
-from Alarm import *
-from OpenEyesAlarm import *
-from SpeechAlarm import *
+import time
 
 
-def create_alarm(time, days, description, ring, frames=None, num_words=None):
+sys.path.append("./src/")
+
+# from AlarmClock.Alarm import *
+from AlarmClock.OpenEyesAlarm import *
+from AlarmClock.SpeechAlarm import *
+
+
+def create_alarm(time, days, description, ring, staring_time=None, num_words=None):
     alarm = None
-    if frames:
-        alarm = OpenEyesAlarm(time, days, description, ring, frames)
+    if staring_time:
+        alarm = OpenEyesAlarm(time, days, description, ring, staring_time)
     else:
         alarm = SpeechAlarm(time, days, description, ring, num_words)
     return alarm
 
 
-def add_alarm(time, days, description, ring, frames=None, num_words=None):
+def add_alarm(time, days, description, ring, staring_time=None, num_words=None):
     # TODO: add alarm to external file
-    alarm = create_alarm(time, days, description, ring, frames, num_words)
+    alarm = create_alarm(time, days, description, ring, staring_time, num_words)
     alarm_list.append(alarm)
 
 
@@ -30,8 +32,8 @@ def delete_alarm(delete_index):
     del alarm_list[delete_index]
 
 
-def edit_alarm(edit_index, time, days, description, ring, frames=None, num_words=None):
-    new_alarm = create_alarm(time, days, description, ring, frames, num_words)
+def edit_alarm(edit_index, time, days, description, ring, staring_time=None, num_words=None):
+    new_alarm = create_alarm(time, days, description, ring, staring_time, num_words)
     # TODO: edit alarm to external file
     alarm_list[edit_index] = new_alarm
 
@@ -40,7 +42,7 @@ def alarm_should_ring(curr_datetime, alarm):
     if alarm.rang_today:
         return False
 
-    curr_day = curr_time.weekday()
+    curr_day = curr_datetime.weekday()
     if Days(curr_day) not in alarm.days:
         return False
 
@@ -54,20 +56,33 @@ def alarm_should_ring(curr_datetime, alarm):
 
 def nearly_active_alarm_checker():
     while True:
-        curr_time = datetime.datetime.now()
+        curr_time = datetime.datetime.now().replace(second=0, microsecond=0)
         for alarm in alarm_list:
             if alarm_should_ring(curr_time, alarm):
                 alarms_queue.put(alarm)
+                time.sleep(60)
+                
 
 
 def execute_alarm():
     while True:
-        if alarms_queue.qsize() > 0:
-            alarm = alarms_queue.get()
+        alarm = alarms_queue.get()
+        alarm.execute_alarm()
 
 if __name__ == "__main__":
     alarm_list = []
+    # mocking threading communication
+    add_alarm(datetime.time(10,19), [Days.Thu], "mock_alarm","", staring_time=60)
+    
     alarms_queue = queue.Queue()
     alarm_time_checker = threading.Thread(
-        target=nearly_active_alarm_checker)
+        target=nearly_active_alarm_checker, daemon=True)
+    
+    alarm_executer = threading.Thread(
+        target=execute_alarm, daemon=True)
+
     alarm_time_checker.start()
+    alarm_executer.start()
+
+    alarm_time_checker.join()
+    alarm_executer.join()

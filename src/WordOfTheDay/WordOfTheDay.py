@@ -84,13 +84,3 @@ class WordOfTheDay():
         words_list = words_list[:self.num_words]
         random.shuffle(words_list)
         return words_list
-
-
-
-wod = WordOfTheDay(num_words=15)
-words_list = wod.get_words_of_the_day()
-for i in range(len(words_list)):
-    try:
-        print(words_list[i])
-    except:
-        print(i)

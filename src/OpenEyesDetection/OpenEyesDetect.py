@@ -4,6 +4,8 @@ import imutils
 from imutils import face_utils
 from imutils.video import VideoStream
 from scipy.spatial import distance as dist
+import math
+import time
 
 
 class OpenEyesDetect():
@@ -17,16 +19,33 @@ class OpenEyesDetect():
             OpenEyesDetect()
         return OpenEyesDetect.__instance
     
-    def __init__(self, camera_num=1, ear_threshold=0.31, consec_frames_threshold=100):
+    def __init__(self, camera_num=1, ear_threshold=0.31):
         if OpenEyesDetect.__instance != None:
             raise Exception("This class is a singleton!")
         else:
             self.PREDICTOR_PATH = "./src/OpenEyesDetection/assets/predictors/face_landmarks_predictor.dat"
             self.camera_num = camera_num
             self.ear_threshold = ear_threshold
-            self.consec_frames_threshold = consec_frames_threshold
             OpenEyesDetect.__instance = self  
 
+    def get_frames_per_seconds(self, camera_num):
+        # Start camera
+        video = cv2.VideoCapture(camera_num)
+        num_frames = 60
+
+        start = time.time()
+        for i in range(0, num_frames) :
+            ret, frame = video.read()
+        end = time.time()
+        
+        # Time elapsed
+        seconds = end - start
+        # Calculate frames per second
+        fps  = num_frames / seconds
+        
+        video.release()
+
+        return math.floor(fps)
 
     def get_eye_aspect_ratio(self, eye):
         # computes the euclidean distance between
@@ -42,7 +61,8 @@ class OpenEyesDetect():
         ear = (v_left + v_right) / (2.0 * h)
         return ear
 
-    def detect_open_eyes(self):
+
+    def detect_open_eyes(self, staring_time):
         open_eyes_frames_num = 0
 
         detector = dlib.get_frontal_face_detector()
@@ -55,9 +75,12 @@ class OpenEyesDetect():
         print("[INFO] starting video stream thread...")
         print("[INFO] print q to quit...")
 
+        fps = self.get_frames_per_seconds(self.camera_num)
+        # TODO: need to calculate estimated frames. Move 0.6 to variable
+        consec_frames_threshold = math.floor(staring_time * fps * 0.6)
         vs = VideoStream(self.camera_num).start()
 
-        while open_eyes_frames_num <= self.consec_frames_threshold:
+        while open_eyes_frames_num <= consec_frames_threshold:
             frame = vs.read()
             frame = imutils.resize(frame, width=450)
             gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -82,7 +105,7 @@ class OpenEyesDetect():
                 cv2.drawContours(frame, [right_eye_hull], -1, (0, 255, 0), 1)
 
                 if (ear >= self.ear_threshold):
-                    if (open_eyes_frames_num <= self.consec_frames_threshold):
+                    if (open_eyes_frames_num <= consec_frames_threshold):
                         open_eyes_frames_num += 1
 
                 cv2.putText(frame, "FR_OPEN_EYES: {}".format(open_eyes_frames_num), (10, 30),
@@ -97,8 +120,3 @@ class OpenEyesDetect():
                 break
         cv2.destroyAllWindows()
         vs.stop()
-
-
-if __name__ == '__main__':
-    bd = OpenEyesDetect.getInstance()
-    bd.detect_open_eyes()
