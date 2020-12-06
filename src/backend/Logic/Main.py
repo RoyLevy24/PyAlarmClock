@@ -72,7 +72,7 @@ def execute_alarm():
 if __name__ == "__main__":
     alarm_list = []
     # mocking threading communication
-    add_alarm(datetime.time(10,19), [Days.Thu], "mock_alarm","", staring_time=60)
+    add_alarm(datetime.time(7,32), [Days.Mon], "mock_alarm","", num_words=6)
     
     alarms_queue = queue.Queue()
     alarm_time_checker = threading.Thread(

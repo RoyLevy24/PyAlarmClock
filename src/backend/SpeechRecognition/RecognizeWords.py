@@ -20,8 +20,8 @@ class RecognizeWords():
             raise Exception("This class is a singleton!")
         else:
             self.recognizer = sr.Recognizer()
-            # TODO: change the device_index to deafault!
-            self.microphone = sr.Microphone(device_index=2)
+            # TODO: change the device_index to default!
+            self.microphone = sr.Microphone(device_index=1)
             self.match_ratio = 0.65
             RecognizeWords.__instance = self 
 
@@ -46,5 +46,7 @@ class RecognizeWords():
         words_list = wod.get_words_of_the_day()
 
         for word_item in words_list:
+            print(word_item.title)
             recognize_word(word_item.title)
+            print("rec")
 

@@ -4,7 +4,7 @@ from urllib.request import urlopen
 
 from bs4 import BeautifulSoup
 
-from WordItem import *
+from WordOfTheDay.WordItem import *
 
 
 class WordOfTheDay():

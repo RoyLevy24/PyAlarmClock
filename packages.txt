@@ -5,3 +5,4 @@ opencv
 cmake
 face recognition
 dlib
+kivymd

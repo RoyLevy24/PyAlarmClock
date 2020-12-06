@@ -9,7 +9,7 @@ class OpenEyesAlarm(Alarm):
     def __init__(self, time, days, description, ring, staring_time):
         Alarm.__init__(self, time, days, description, ring)
         self.staring_time = staring_time
-        self.dismiss_function = dismiss_alarm
+        Alarm.dismiss_function = self.dismiss_alarm
 
     def execute_alarm(self):
         super(OpenEyesAlarm, self).execute_alarm()
