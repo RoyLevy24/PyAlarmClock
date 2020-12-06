@@ -5,7 +5,7 @@ from service.actions.actions import *
 from service.actions.actions_types import *
 
 class MessageReducer():
-
+    __instance = None
     @staticmethod
     def getInstance():
         if MessageReducer.__instance == None:

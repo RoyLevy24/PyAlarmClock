@@ -32,13 +32,13 @@ class Alarm():
         return alarm_str
 
 class Days(enum.Enum):
-    Mon = (0, "Monday")
-    Tue = (1, "Tuesday")
-    Wen = (2, "Wednesday")
-    Thu = (3, "Thursday")
-    Fri = (4, "Friday")
-    Sat = (5, "Saturday")
-    Sun = (6, "Sunday")
+    Mon = (0, "mon")
+    Tue = (1, "tue")
+    Wen = (2, "wed")
+    Thu = (3, "thu")
+    Fri = (4, "fri")
+    Sat = (5, "sat")
+    Sun = (6, "sun")
 
     def __str__(self):
         return self.value[1]

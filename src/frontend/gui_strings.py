@@ -26,6 +26,7 @@ ScreenManager:
 <AlarmFormScreen>:
     name: 'alarm_form'
 
+    form_toolbar: form_toolbar
     time_picker: time_picker
     check_days: [check_mon, check_tue, check_wen, check_thu, check_fri, check_sat, check_sun]
     tf_alarm_param: tf_alarm_param
@@ -33,6 +34,7 @@ ScreenManager:
     alarm_desc: alarm_desc
 
     MDToolbar:
+        id: form_toolbar
         title: "Alarm Form"
         pos_hint: {"top": 1}
         elevation: 11
@@ -322,19 +324,14 @@ ScreenManager:
 alarm_string = """
 ThreeLineAvatarIconListItem:
     markup: True
-    text: "12:00"
     font_style: "H5"
-    secondary_text: "Test of Friday!"
-    tertiary_text: ", ".join(["Sun", "Mon", "Tue", "Wen", "Thu"])
-    tertiary_font_style: "Subtitle2"
-    on_release: print("Clicked item")
-    
+    tertiary_font_style: "Subtitle2"  
 
     IconLeftWidget:
         icon: "pencil"
-        on_release: print("Clicked edit")
+        on_release: app.root.screens[0].edit_alarm(root.ids.id)
 
     IconRightWidget:
         icon: "delete"
-        on_release: print("Clicked delete")
+        on_release: print(app.root.current)
 """
