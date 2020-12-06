@@ -1,10 +1,12 @@
 import random
+import sys
+sys.path.append("./src/")
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
 from bs4 import BeautifulSoup
 
-from WordOfTheDay.WordItem import *
+from backend.WordOfTheDay.WordItem import *
 
 
 class WordOfTheDay():

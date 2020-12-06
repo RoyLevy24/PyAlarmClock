@@ -1,6 +1,6 @@
 import sys
 sys.path.append("./src/")
-from WordOfTheDay.WordOfTheDay import *
+from backend.WordOfTheDay.WordOfTheDay import *
 from difflib import SequenceMatcher
 import speech_recognition as sr
 

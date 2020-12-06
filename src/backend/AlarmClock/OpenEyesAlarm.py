@@ -1,13 +1,13 @@
 import sys
 sys.path.append("./src/")
-from OpenEyesDetection.OpenEyesDetect import *
-from AlarmClock.Alarm import *
+from backend.OpenEyesDetection.OpenEyesDetect import *
+from backend.AlarmClock.Alarm import *
 import datetime
 
 class OpenEyesAlarm(Alarm):
 
-    def __init__(self, time, days, description, ring, staring_time):
-        Alarm.__init__(self, time, days, description, ring)
+    def __init__(self, alarm_id, time, days, description, staring_time):
+        Alarm.__init__(self, alarm_id, time, days, description)
         self.staring_time = staring_time
         Alarm.dismiss_function = self.dismiss_alarm
 

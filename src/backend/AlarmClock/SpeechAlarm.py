@@ -1,12 +1,12 @@
 import sys
 sys.path.append("./src/")
-from SpeechRecognition.RecognizeWords import *
-from AlarmClock.Alarm import *
+from backend.SpeechRecognition.RecognizeWords import *
+from backend.AlarmClock.Alarm import *
 
 class SpeechAlarm(Alarm):
 
-    def __init__(self, time, days, description, ring, num_words):
-        Alarm.__init__(self, time , days, description, ring)
+    def __init__(self, alarm_id, time, days, description, num_words):
+        Alarm.__init__(self, alarm_id, time, days, description)
         self.num_words = num_words
         Alarm.dismiss_function = self.dismiss_alarm
 

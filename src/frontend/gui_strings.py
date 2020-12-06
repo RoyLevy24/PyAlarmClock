@@ -1,6 +1,6 @@
 screen_helper = """
 ScreenManager:
-    # MainScreen:
+    MainScreen:
     AlarmFormScreen:
     # AlarmActiveScreen:
     # DismissSpeechScreen:
@@ -15,7 +15,7 @@ ScreenManager:
             title: "Alarms"
             pos_hint: {"top": 1}
             elevation: 11
-            right_action_items: [["plus", lambda x: root.add_alarm()]]
+            right_action_items: [["plus", lambda x: root.create_alarm()]]
 
 
         ScrollView:
@@ -25,6 +25,12 @@ ScreenManager:
 
 <AlarmFormScreen>:
     name: 'alarm_form'
+
+    time_picker: time_picker
+    check_days: [check_mon, check_tue, check_wen, check_thu, check_fri, check_sat, check_sun]
+    tf_alarm_param: tf_alarm_param
+    check_type: [check_speech, check_face, check_none]
+    alarm_desc: alarm_desc
 
     MDToolbar:
         title: "Alarm Form"
@@ -39,22 +45,31 @@ ScreenManager:
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
         MDRectangleFlatIconButton:
+            id: time_picker
             icon: "clock"
             text: "12:00"
             font_size: '70sp'
             height: dp(60)
             width: dp(250)
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            on_press: root.open_time_picker()
+
+        MDTextField:
+            id: alarm_desc
+            size_hint_x: .8
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            hint_text: "Enter Description"
+            multiline: True
 
 
         MDBoxLayout:
             orientation:'horizontal'
-            id: "alarm_from_days_box"
+            id: alarm_form_days_box
             padding: [20,20,20,20]
             size_hint_y: .2
 
             MDBoxLayout:
-                id: "alarm_from_day_mon"
+                id: alarm_from_day_mon
                 orientation:'vertical'
 
                 MDLabel:
@@ -63,9 +78,10 @@ ScreenManager:
                     text: "Mon"
 
                 MDCheckbox:
+                    id: check_mon
 
             MDBoxLayout:
-                id: "alarm_from_day_tue"
+                id: alarm_form_day_tue
                 orientation:'vertical'
 
                 MDLabel:
@@ -74,9 +90,10 @@ ScreenManager:
                     text: "Tue"
 
                 MDCheckbox:
+                    id: check_tue
 
             MDBoxLayout:
-                id: "alarm_from_day_wen"
+                id: alarm_form_day_tue
                 orientation:'vertical'
 
                 MDLabel:
@@ -85,9 +102,10 @@ ScreenManager:
                     text: "Wen"
 
                 MDCheckbox:
+                    id: check_wen
 
             MDBoxLayout:
-                id: "alarm_from_day_thu"
+                id: alarm_form_day_thu
                 orientation:'vertical'
 
                 MDLabel:
@@ -96,9 +114,10 @@ ScreenManager:
                     text: "Thu"
 
                 MDCheckbox:
+                    id: check_thu
 
             MDBoxLayout:
-                id: "alarm_from_day_fri"
+                id: alarm_form_day_fri
                 orientation:'vertical'
 
                 MDLabel:
@@ -107,10 +126,10 @@ ScreenManager:
                     text: "Fri"
                 
                 MDCheckbox:
-                    active: True
+                    id: check_fri
 
             MDBoxLayout:
-                id: "alarm_from_day_sat"
+                id: alarm_form_day_sat
                 orientation:'vertical'
 
                 MDLabel:
@@ -119,9 +138,10 @@ ScreenManager:
                     text: "Sat"
 
                 MDCheckbox:
+                    id: check_sat
 
             MDBoxLayout:
-                id: "alarm_from_day_sun"
+                id: alarm_form_day_sun
                 orientation:'vertical'
 
                 MDLabel:
@@ -130,19 +150,20 @@ ScreenManager:
                     text: "Sun"
 
                 MDCheckbox:
+                    id: check_sun
 
         MDBoxLayout:
             orientation:'vertical'
-            id: "alarm_form_types_box"
+            id: alarm_form_types_box
             size_hint_y: .2
 
             MDBoxLayout:
                 orientation:'horizontal'
-                id: "alarm_from_types_checkboxes"
+                id: alarm_from_types_checkboxes
 
                 MDBoxLayout:
                     orientation:'vertical'
-                    id: "type_speech_box"
+                    id: type_speech_box
 
                     MDLabel:
                         halign: "center"
@@ -150,11 +171,14 @@ ScreenManager:
                         text: "Speech"
 
                     MDCheckbox:
+                        name: "check_speech"
                         group: 'types'
+                        id: check_speech
+                        on_release: root.select_speech_alarm()
 
                 MDBoxLayout:
                     orientation:'vertical'
-                    id: "type_face_box"
+                    id: type_face_box
 
                     MDLabel:
                         halign: "center"
@@ -162,11 +186,14 @@ ScreenManager:
                         text: "Face"
 
                     MDCheckbox:
+                        name: "check_face"
                         group: 'types'
+                        id: check_face
+                        on_release: root.select_face_alarm()
 
                 MDBoxLayout:
                     orientation:'vertical'
-                    id: "type_none_box"
+                    id: type_none_box
 
                     MDLabel:
                         halign: "center"
@@ -174,20 +201,26 @@ ScreenManager:
                         text: "None"
 
                     MDCheckbox:
+                        name: "check_none"
+                        id: check_none
                         active: True
                         group: 'types'
+                        on_release: root.select_none_alarm()
+                        
+
                 
         MDTextField:
+            id: tf_alarm_param
             size_hint_x: .5
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            hint_text: "Staring Time (Seconds)"
+            hint_text: ""
             disabled: True
 
     MDToolbar:
         pos_hint: {"bottom": 1}
         elevation: 11
-        right_action_items: [["check", lambda x: print("add alarm")]]
-        left_action_items: [["close", lambda x: print("cancel alarm")]]
+        right_action_items: [["check", lambda x: root.add_alarm()]]
+        left_action_items: [["close", lambda x: root.back_to_alarm_list()]]
 
 
 <AlarmActiveScreen>
