@@ -1,5 +1,5 @@
 import sys
-
+import weakref
 sys.path.append("./src/")
 
 from service.MessageReducer import *
@@ -14,7 +14,9 @@ from kivy.lang.builder import Builder
 from kivy.core.window import Window
 from datetime import datetime
 from gui_strings import alarm_string
-
+from kivymd.uix.list import IconLeftWidget, IconRightWidget, ThreeLineAvatarIconListItem
+from functools import partial
+# from screens.MainScreen import edit_alarm, delete_alarm
 
 
 class AlarmFormScreen(Screen, FloatLayout):
@@ -135,6 +137,7 @@ class AlarmFormScreen(Screen, FloatLayout):
 
     
     def set_alarm_details(self, alarm_item, alarm_dict, days_str):
+        alarm_item.name = alarm_dict["alarm_id"]
         alarm_item.text = alarm_dict["time"].strftime("%H:%M")
         alarm_item.secondary_text = alarm_dict["description"]
         alarm_item.tertiary_text = days_str
@@ -145,13 +148,12 @@ class AlarmFormScreen(Screen, FloatLayout):
         alarm_id = alarm_dict["alarm_id"]
 
         alarm_item = Builder.load_string(alarm_string)
-        alarm_item.ids["id"] = alarm_id
         self.set_alarm_details(alarm_item, alarm_dict, days_str)
 
         main_screen.alarm_list.append(alarm_dict)
         main_screen.ids.list.add_widget(alarm_item)
-        main_screen.ids[alarm_id] = alarm_item
-
+        main_screen.ids[alarm_id] = weakref.proxy(alarm_item)
+        
     def update_alarm_in_main(self, alarm_dict):
         main_screen = self.manager.screens[0]
         days_str = get_days_str(alarm_dict["days"])

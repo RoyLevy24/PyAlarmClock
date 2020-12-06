@@ -329,9 +329,9 @@ ThreeLineAvatarIconListItem:
 
     IconLeftWidget:
         icon: "pencil"
-        on_release: app.root.screens[0].edit_alarm(root.ids.id)
+        on_release: app.root.screens[0].edit_alarm(root.name)
 
     IconRightWidget:
         icon: "delete"
-        on_release: print(app.root.current)
+        on_release: app.root.screens[0].delete_alarm(root.name)
 """
