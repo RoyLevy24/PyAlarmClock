@@ -38,14 +38,14 @@ class LogicManager():
     def create_alarm(self, alarm_id, time, days, description, staring_time=None, num_words=None):
         alarm = None
         if staring_time:
-            alarm = OpenEyesAlarm(alarm_id, time, days,
+            alarm = OpenEyesAlarm(alarm_id, self.main_screen, time, days,
                                   description, staring_time)
         elif num_words:
-            alarm = SpeechAlarm(alarm_id, time, days, description, num_words)
+            alarm = SpeechAlarm(alarm_id, self.main_screen, time, days, description, num_words)
         
         else:
-            alarm = Alarm(alarm_id, time, days, description, num_words)
-
+            alarm = Alarm(alarm_id, self.main_screen, time, days, description)
+        
         return alarm
 
     def add_alarm(self, alarm_id, time, days, description, staring_time=None, num_words=None):
@@ -54,17 +54,15 @@ class LogicManager():
         self.alarm_list.append(alarm)
 
     def delete_alarm(self, alarm_id):
-        alarm_list = list(
-            filter(lambda alarm: alarm.alarm_id != alarm_id, alarm_list))
+        self.alarm_list = list(
+            filter(lambda alarm: alarm.alarm_id != alarm_id, self.alarm_list))
 
     def edit_alarm(self, alarm_id, time, days, description, staring_time=None, num_words=None):
-        to_edit_alarm = self.get_alarm_by_id(alarm_id)
-        if to_edit_alarm != None:
-            to_edit_alarm.time = time
-            to_edit_alarm.days = days
-            to_edit_alarm.description = description
-            to_edit_alarm.staring_time = staring_time
-            to_edit_alarm.num_words = num_words
+        alarm_idx = self.get_alarm_index_by_id(alarm_id)
+        if alarm_idx != -1:
+            self.alarm_list[alarm_idx] = self.create_alarm(
+            alarm_id, time, days, description, staring_time, num_words)
+
 
 
     def get_alarm_by_id(self, alarm_id):
@@ -73,6 +71,12 @@ class LogicManager():
         if len(alarms) > 0:
             return alarms[0]
         return None
+
+    def get_alarm_index_by_id(self, alarm_id):
+        for i in range(len(self.alarm_list)):
+            if self.alarm_list[i].alarm_id == alarm_id:
+                return i
+        return -1
 
     def alarm_should_ring(self, curr_datetime, alarm):
         if alarm.rang_today:

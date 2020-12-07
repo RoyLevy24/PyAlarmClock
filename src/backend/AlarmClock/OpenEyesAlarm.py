@@ -6,10 +6,11 @@ import datetime
 
 class OpenEyesAlarm(Alarm):
 
-    def __init__(self, alarm_id, time, days, description, staring_time):
-        Alarm.__init__(self, alarm_id, time, days, description)
+    def __init__(self, alarm_id, main_screen, time, days, description, staring_time):
+        Alarm.__init__(self, alarm_id, main_screen, time, days, description)
         self.staring_time = staring_time
 
     def execute_alarm(self):
         open_eyes_detector = OpenEyesDetect.getInstance()
         open_eyes_detector.detect_open_eyes(self.staring_time)
+        super(OpenEyesAlarm, self).execute_alarm()

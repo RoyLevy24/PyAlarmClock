@@ -1,14 +1,16 @@
-import sys
-sys.path.append("./src/")
 from backend.WordOfTheDay.WordOfTheDay import *
-from difflib import SequenceMatcher
 import speech_recognition as sr
+from difflib import SequenceMatcher
+import sys
+
+sys.path.append("./src/")
 
 
 class RecognizeWords():
 
     # TODO: Need to be singleton
-
+    __instance = None
+    
     @staticmethod
     def getInstance():
         if RecognizeWords.__instance == None:
@@ -23,7 +25,7 @@ class RecognizeWords():
             # TODO: change the device_index to default!
             self.microphone = sr.Microphone(device_index=1)
             self.match_ratio = 0.65
-            RecognizeWords.__instance = self 
+            RecognizeWords.__instance = self
 
     def are_similar_words(self, actual_word, said_word):
         ratio = SequenceMatcher(None, actual_word, said_word).ratio()
@@ -41,12 +43,16 @@ class RecognizeWords():
                 # TODO: change exception message
                 print(str(e))
 
-    def recognize_words(self, num_words):
+    def get_word_list(self, num_words):
         wod = WordOfTheDay(num_words=num_words)
         words_list = wod.get_words_of_the_day()
+        return words_list
 
-        for word_item in words_list:
-            print(word_item.title)
-            recognize_word(word_item.title)
-            print("rec")
+    # def recognize_words(self, num_words):
+    #     wod = WordOfTheDay(num_words=num_words)
+    #     words_list = wod.get_words_of_the_day()
 
+    #     for word_item in words_list:
+    #         print(word_item.title)
+    #         recognize_word(word_item.title)
+    #         print("rec")

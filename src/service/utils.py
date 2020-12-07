@@ -15,10 +15,10 @@ def get_days_str(days_idx):
     return ", ".join(days_names)
 
 
-def is_non_negative_int(s):
-    """Returns true if @s is an integer >= 0 ."""
+def is_positive_int(s):
+    """Returns true if @s is an integer > 0 ."""
     try:
         if re.search("^\d+$", s) != None:
-            return int(s) >= 0
+            return int(s) > 0
     except ValueError:
         return False

@@ -7,7 +7,7 @@ ScreenManager:
     MainScreen:
     AlarmFormScreen:
     AlarmActiveScreen:
-    # DismissSpeechScreen:
+    DismissSpeechScreen:
 
 
 
@@ -274,8 +274,17 @@ ScreenManager:
 
 <DismissSpeechScreen>
     name: 'dismiss_speech'
+
+    dismiss_speech_title: dismiss_speech_title
+    dismiss_speech_word: dismiss_speech_word
+    dismiss_speech_pronounce: dismiss_speech_pronounce
+    dismiss_speech_play_word: dismiss_speech_play_word
+    dismiss_speech_word_desc: dismiss_speech_word_desc
+    dismiss_speech_record: dismiss_speech_record
+    dismiss_speech_bottom: dismiss_speech_bottom
     MDToolbar:
-        title: "Dismiss Speech - 1/5"
+        id: dismiss_speech_title
+        # title: "Dismiss Speech - 1/5"
         pos_hint: {"top": 1}
         elevation: 11
         
@@ -287,7 +296,8 @@ ScreenManager:
         size_hint_y: .7
         
         MDLabel:
-            text: "Word"
+            id: dismiss_speech_word
+            # text: "Word"
             halign: "center"
             valign: "center"
             markup: True
@@ -298,19 +308,22 @@ ScreenManager:
             orientation: 'horizontal'
 
             MDLabel:
-                text: "[wo-rd]"
+                id: dismiss_speech_pronounce
+                # text: "[wo-rd]"
                 halign: "center"
                 valign: "center"
                 markup: True
                 font_style: "H6"
             
             MDIconButton:
+                id: dismiss_speech_play_word
                 icon: "play-circle"
                 size_hint_y: .3
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         
         MDLabel:
-            text: "This is the word's Description"
+            id: dismiss_speech_word_desc
+            # text: "This is the word's Description"
             halign: "center"
             valign: "center"
             markup: True
@@ -318,15 +331,18 @@ ScreenManager:
             multiline: True
 
         MDFloatingActionButton:
+            id: dismiss_speech_record
             icon: "microphone"
             elevation_normal: 10
             md_bg_color: app.theme_cls.primary_light
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
     MDToolbar:
+        id: dismiss_speech_bottom
         title: "Next Word"
         pos_hint: {"bottom": 1}
-        right_action_items: [["arrow-right-bold", lambda x: print("next word")]]
+        # TODO: change on_press
+        # right_action_items: [["arrow-right-bold", lambda x: print("next word")]]
 
 """
 

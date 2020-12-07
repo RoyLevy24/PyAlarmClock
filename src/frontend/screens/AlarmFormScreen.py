@@ -183,8 +183,8 @@ class AlarmFormScreen(Screen, FloatLayout):
         Raises: 
             Exception: if @num_words is not a non-negative integer or exceeds MAX_NUM_WORDS.
         """
-        if not is_non_negative_int(num_words):
-            raise Exception("Num Words Must be a non-negative int!")
+        if not is_positive_int(num_words):
+            raise Exception("Num Words Must be a positive int!")
             
         else:
             num_words = int(num_words)
@@ -198,8 +198,8 @@ class AlarmFormScreen(Screen, FloatLayout):
         Raises: 
             Exception: if @stare_time is not a non-negative integer or exceeds MAX_STARE_TIME.
         """
-        if not is_non_negative_int(stare_time):
-            raise Exception("Staring Time Must be a non-negative int!")
+        if not is_positive_int(stare_time):
+            raise Exception("Staring Time Must be a positive int!")
 
         else:
             stare_time = int(stare_time)
