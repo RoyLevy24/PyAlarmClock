@@ -26,6 +26,9 @@ class AlarmFormScreen(Screen, FloatLayout):
     def __init__(self, **kwargs):
         super(AlarmFormScreen, self).__init__(**kwargs)
         self.alarm_to_edit = None
+        self.MAX_DESC_SIZE = 50
+        self.MAX_NUM_WORDS = 10
+        self.MAX_STARE_TIME = 300
 
 #----------------------------------------reset actions--------------------------------------------#
     def reset_days(self):
@@ -103,8 +106,48 @@ class AlarmFormScreen(Screen, FloatLayout):
                 return i
         return -1
 
-    def check_valid_input(self):
-        pass
+    def check_valid_days(self, days):
+        if len(days) == 0:
+            raise Exception("You Must Select At Least One Day!")
+
+    def check_valid_description(self, description):
+        if len(description) > self.MAX_DESC_SIZE:
+            raise Exception(f'Max Description Length is {self.MAX_DESC_SIZE}!')
+    
+    def check_valid_num_words(self, num_words):
+        if not is_non_negative_int(num_words):
+            raise Exception("Num Words Must be a non-negative int!")
+            
+        else:
+            num_words = int(num_words)
+            if num_words > self.MAX_NUM_WORDS:
+                raise Exception(f'Max Num of Words is {self.MAX_NUM_WORDS}!')
+
+    def check_valid_stare_time(self, stare_time):
+        if not is_non_negative_int(stare_time):
+            raise Exception("Staring Time Must be a non-negative int!")
+
+        else:
+            stare_time = int(stare_time)
+            if stare_time > self.MAX_STARE_TIME:
+                raise Exception(f'Max Staring Time is {self.MAX_STARE_TIME}!')
+
+
+    def check_valid_alarm_type(self, alarm_type):
+        alarm_type_idx = alarm_type[0]
+        alarm_type_param = alarm_type[1]
+
+        if alarm_type_idx == 0:
+            self.check_valid_num_words(alarm_type_param)
+        elif alarm_type_idx == 1:
+            self.check_valid_stare_time(alarm_type_param)
+
+
+    def check_valid_input(self, alarm_dict):
+        self.check_valid_days(alarm_dict["days"])
+        self.check_valid_description(alarm_dict["description"])
+        self.check_valid_alarm_type(alarm_dict["alarm_type"])
+        
 
     
     def load_time(self, time):
@@ -112,8 +155,11 @@ class AlarmFormScreen(Screen, FloatLayout):
         self.time_picker.text = time_str
     
     def load_days(self, days):
-        for day in days:
-            self.check_days[day].active = True
+        for i in range(7):
+            if i in days:
+                self.check_days[i].active = True
+            else:
+                self.check_days[i].active = False
 
     def load_description(self, description):
         self.alarm_desc.text = description
@@ -157,11 +203,17 @@ class AlarmFormScreen(Screen, FloatLayout):
             "description": alarm_desc
         }
 
-        if to_edit != None:
-            self.update_alarm_in_main(alarm_dict)
-        else:
-            self.add_alarm_in_main(alarm_dict)
+        try:
+            self.check_valid_input(alarm_dict)
+
+            if to_edit != None:
+                self.update_alarm_in_main(alarm_dict)
+            else:
+                self.add_alarm_in_main(alarm_dict)
+                self.reset_alarm_form()
+        except Exception as e:
             self.reset_alarm_form()
+            print(str(e))
 
 
         # message = {"type": ADD_ALARM, "payload": alarm_dict}
