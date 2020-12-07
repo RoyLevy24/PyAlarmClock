@@ -20,6 +20,11 @@ from gui_strings import alarm_string
 # TODO: cleanup code and organize
 
 class AlarmFormScreen(Screen, FloatLayout):
+    """
+    This class responsible for displaying add/edit form screen for the alarms.
+    From this class the user can add/edit an alarm.
+    """
+
     time_picker = ObjectProperty(None)
     check_days = ListProperty([])
 
@@ -32,21 +37,29 @@ class AlarmFormScreen(Screen, FloatLayout):
 
 #----------------------------------------reset actions--------------------------------------------#
     def reset_days(self):
+        # unchecking all the checkboxes of the days
         for day in self.check_days:
             day.active = False
 
     def check_true_curr_weekday(self):
+        # checks the checks box represanting the current day
         now = datetime.now()
         weekday = now.weekday()
         self.check_days[weekday].active = True
 
     def reset_types(self):
+        # uncheck all the types checkboxes
         for type_checkbox in self.check_type:
             type_checkbox.active = False
+        # checking the default checkbox (type None)
         self.check_type[2].active = True
+        # reseting text field of alarm type
         self.select_none_alarm()
 
     def reset_alarm_form(self):
+        """
+        Reseting all the details in the alarm form.
+        """
         self.time_picker.text = "12:00"
         self.alarm_desc.text = ""
         self.reset_days()
@@ -57,11 +70,17 @@ class AlarmFormScreen(Screen, FloatLayout):
 
 #-------------------------------------transitions actions-----------------------------------------#
     def back_to_alarm_list(self):
+        """
+        Transitions into the MainScreen
+        """
         self.reset_alarm_form()
         self.manager.transition.direction = 'right'
         self.manager.current = 'main'
 
     def add_alarm(self):
+        """
+        Adds/Edits an alarm to the MainScreen and then transition into it.
+        """
         try:
             self.get_new_alarm_details()
             self.manager.transition.direction = 'up'
@@ -74,19 +93,19 @@ class AlarmFormScreen(Screen, FloatLayout):
 
 #--------------------------------------input actions----------------------------------------------#
 
-    def select_alarm(self, hint_text="", disabled=True):
+    def select_alarm_type(self, hint_text="", disabled=True):
         self.tf_alarm_param.disabled = disabled
         self.tf_alarm_param.text = ""
         self.tf_alarm_param.hint_text = hint_text
 
     def select_face_alarm(self):
-        self.select_alarm("Enter Staring Time (Seconds)", disabled=False)
+        self.select_alarm_type("Enter Staring Time (Seconds)", disabled=False)
 
     def select_speech_alarm(self):
-        self.select_alarm("Enter Num of Words", disabled=False)
+        self.select_alarm_type("Enter Num of Words", disabled=False)
 
     def select_none_alarm(self):
-        self.select_alarm()
+        self.select_alarm_type()
 
     def open_time_picker(self):
         time_dialog = MDTimePicker()
@@ -250,6 +269,8 @@ class AlarmFormScreen(Screen, FloatLayout):
         for i in range(len(self.check_type)):
             if i == type_idx:
                 self.check_type[i].active = True
+                if i != 2:
+                    self.tf_alarm_param.disabled = False 
             else:
                 self.check_type[i].active = False
         # setting the param string in the form
