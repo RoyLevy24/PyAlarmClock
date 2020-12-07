@@ -110,16 +110,35 @@ class AlarmFormScreen(Screen, FloatLayout):
             if check_type[i].active:
                 return i
         return -1
+#-------------------------------------validate input actions--------------------------------------#
 
     def check_valid_days(self, days):
+        """
+        Checks if the chosen days by the user is valid.
+
+        Raises: 
+            Exception: If the user have not chosen at least one day.
+        """
         if len(days) == 0:
             raise Exception("You Must Select At Least One Day!")
 
     def check_valid_description(self, description):
+        """
+        Checks if the alarm description entered by the user is valid
+
+        Raises:
+            Exception: If the description entered by the user is exceeding the max_desc_size.
+        """
         if len(description) > self.MAX_DESC_SIZE:
             raise Exception(f'Max Description Length is {self.MAX_DESC_SIZE}!')
     
     def check_valid_num_words(self, num_words):
+        """
+        Checks if the number of words for speech_alarm entered by the user is valid.
+
+        Raises: 
+            Exception: if @num_words is not a non-negative integer or exceeds MAX_NUM_WORDS.
+        """
         if not is_non_negative_int(num_words):
             raise Exception("Num Words Must be a non-negative int!")
             
@@ -129,6 +148,12 @@ class AlarmFormScreen(Screen, FloatLayout):
                 raise Exception(f'Max Num of Words is {self.MAX_NUM_WORDS}!')
 
     def check_valid_stare_time(self, stare_time):
+        """
+        Checks if the staring time for face_alarm entered by the user is valid.
+
+        Raises: 
+            Exception: if @stare_time is not a non-negative integer or exceeds MAX_STARE_TIME.
+        """
         if not is_non_negative_int(stare_time):
             raise Exception("Staring Time Must be a non-negative int!")
 
@@ -139,6 +164,9 @@ class AlarmFormScreen(Screen, FloatLayout):
 
 
     def check_valid_alarm_type(self, alarm_type):
+        """
+        Checks if the alarm_type entered by the user is valid.
+        """
         alarm_type_idx = alarm_type[0]
         alarm_type_param = alarm_type[1]
 
@@ -149,49 +177,32 @@ class AlarmFormScreen(Screen, FloatLayout):
 
 
     def check_valid_input(self, alarm_dict):
+        """
+        Checks if the parametes entered by the user for an alarm is valid.
+
+        Args:
+            alarm_dict (dict): A dictionary containing the alarm details
+        
+        Raises:
+            Exception: If the alarm details in @alarm_dict are not valid.
+        """
         self.check_valid_days(alarm_dict["days"])
         self.check_valid_description(alarm_dict["description"])
         self.check_valid_alarm_type(alarm_dict["alarm_type"])
-        
-    
-    def load_time(self, time):
-        time_str = time.strftime("%H:%M")
-        self.time_picker.text = time_str
-    
-    def load_days(self, days):
-        for i in range(7):
-            if i in days:
-                self.check_days[i].active = True
-            else:
-                self.check_days[i].active = False
-
-    def load_description(self, description):
-        self.alarm_desc.text = description
-
-    def load_alarm_type(self, alarm_type):
-        type_idx = alarm_type[0]
-        type_param = alarm_type[1]
-
-        for i in range(len(self.check_type)):
-            if i == type_idx:
-                self.check_type[i].active = True
-            else:
-                self.check_type[i].active = False
-
-        self.tf_alarm_param.text = type_param
-
-
-    def load_alarm_to_edit_details(self):
-        to_edit = self.alarm_to_edit
-        self.load_time(to_edit["time"])
-        self.load_days(to_edit["days"])
-        self.load_description(to_edit["description"])
-        self.load_alarm_type(to_edit["alarm_type"])
 
     def dialog_close(self, *args):
+        """
+        Closes error dialog.
+        """
         self.error_dialog.dismiss(force=True)
 
     def show_error_dialog(self, error_str):
+        """
+        Shows an error dialog when an exception is raised for invalid input.
+
+        Args:
+            error_str (String): Error to show in teh dialog.
+        """
         self.error_dialog = MDDialog(
             text=error_str,
             pos_hint={"center_x":.5, "center_y":.5},
@@ -199,6 +210,63 @@ class AlarmFormScreen(Screen, FloatLayout):
             buttons=[MDRaisedButton(text="DISCARD", on_press=self.dialog_close)]
         )
         self.error_dialog.open()
+
+#-------------------------------------------------------------------------------------------------#
+        
+    
+    def load_time(self, time):
+        """
+        Loads a time to the form.
+
+        Args:
+            time (datetime.time): time to show in the form.
+        """
+        time_str = time.strftime("%H:%M")
+        self.time_picker.text = time_str
+    
+    def load_days(self, days):
+        """
+        Checks all checkboxes of the days in the form based upon a given indexes for the days.
+        """
+        for i in range(7):
+            if i in days:
+                self.check_days[i].active = True
+            else:
+                self.check_days[i].active = False
+
+    def load_description(self, description):
+        """
+        Loads a description to the form
+        """
+        self.alarm_desc.text = description
+
+    def load_alarm_type(self, alarm_type):
+        """
+        Checks a checkbox of a given alarm type and inserting the given param string for the type.
+        """
+        type_idx = alarm_type[0]
+        type_param = alarm_type[1]
+        # checking true the alarm type checkbox
+        for i in range(len(self.check_type)):
+            if i == type_idx:
+                self.check_type[i].active = True
+            else:
+                self.check_type[i].active = False
+        # setting the param string in the form
+        self.tf_alarm_param.text = type_param
+
+
+    def load_alarm_to_edit_details(self):
+        """
+        Loads alarm details for alarm ready to be edited.
+        """
+        to_edit = self.alarm_to_edit
+        self.load_time(to_edit["time"])
+        self.load_days(to_edit["days"])
+        self.load_description(to_edit["description"])
+        self.load_alarm_type(to_edit["alarm_type"])
+
+
 
     def get_new_alarm_details(self):
         to_edit = self.alarm_to_edit
