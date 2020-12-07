@@ -7,6 +7,8 @@ from service.AlarmIdGenerator import *
 from service.utils import *
 from kivymd.uix.picker import MDTimePicker
 from kivymd.app import MDApp
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.button import MDRaisedButton
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ListProperty, ObjectProperty
@@ -16,8 +18,8 @@ from datetime import datetime
 from gui_strings import alarm_string
 from kivymd.uix.list import IconLeftWidget, IconRightWidget, ThreeLineAvatarIconListItem
 from functools import partial
-# from screens.MainScreen import edit_alarm, delete_alarm
 
+# TODO: cleanup code and organize
 
 class AlarmFormScreen(Screen, FloatLayout):
     time_picker = ObjectProperty(None)
@@ -62,9 +64,14 @@ class AlarmFormScreen(Screen, FloatLayout):
         self.manager.current = 'main'
 
     def add_alarm(self):
-        self.get_new_alarm_details()
-        self.manager.transition.direction = 'up'
-        self.manager.current = 'main'
+        try:
+            self.get_new_alarm_details()
+            self.manager.transition.direction = 'up'
+            self.manager.current = 'main'
+        except Exception as e:
+            # self.reset_alarm_form()
+            self.show_error_dialog(str(e))
+
 #-------------------------------------------------------------------------------------------------#
 
 #--------------------------------------input actions----------------------------------------------#
@@ -178,12 +185,23 @@ class AlarmFormScreen(Screen, FloatLayout):
 
 
     def load_alarm_to_edit_details(self):
-        print(self.alarm_to_edit)
         to_edit = self.alarm_to_edit
         self.load_time(to_edit["time"])
         self.load_days(to_edit["days"])
         self.load_description(to_edit["description"])
         self.load_alarm_type(to_edit["alarm_type"])
+
+    def dialog_close(self, *args):
+        self.error_dialog.dismiss(force=True)
+
+    def show_error_dialog(self, error_str):
+        self.error_dialog = MDDialog(
+            text=error_str,
+            pos_hint={"center_x":.5, "center_y":.5},
+            size_hint_x=.8,
+            buttons=[MDRaisedButton(text="DISCARD", on_press=self.dialog_close)]
+        )
+        self.error_dialog.open()
 
     def get_new_alarm_details(self):
         to_edit = self.alarm_to_edit
@@ -203,21 +221,16 @@ class AlarmFormScreen(Screen, FloatLayout):
             "description": alarm_desc
         }
 
-        try:
-            self.check_valid_input(alarm_dict)
+        self.check_valid_input(alarm_dict)
 
-            if to_edit != None:
-                self.update_alarm_in_main(alarm_dict)
-            else:
-                self.add_alarm_in_main(alarm_dict)
-                self.reset_alarm_form()
-        except Exception as e:
+        if to_edit != None:
+            self.update_alarm_in_main(alarm_dict)
+        else:
+            self.add_alarm_in_main(alarm_dict)
             self.reset_alarm_form()
-            print(str(e))
-
-
-        # message = {"type": ADD_ALARM, "payload": alarm_dict}
-        # MessageReducer.getInstance().add_message(message)
+    # TODO: connect GUI to Logic
+    # message = {"type": ADD_ALARM, "payload": alarm_dict}
+    # MessageReducer.getInstance().add_message(message)
 #-------------------------------------------------------------------------------------------------#
 
     

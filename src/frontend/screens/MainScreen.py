@@ -35,10 +35,6 @@ class MainScreen(Screen, FloatLayout):
         return None
 
     def create_alarm(self):
-        # TODO: need to implement this screen
-        # self.manager.current = "add_alarm"
-        # alarm_item = Builder.load_string(alarm_string)
-        # self.ids.list.add_widget(alarm_item)
         alarm_form_screen = self.manager.screens[1]
         alarm_form_screen.form_toolbar.title = "Add Alarm"
         self.check_true_curr_weekday(alarm_form_screen)
