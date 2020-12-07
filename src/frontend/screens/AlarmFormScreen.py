@@ -9,15 +9,13 @@ from kivymd.uix.picker import MDTimePicker
 from kivymd.app import MDApp
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDRaisedButton
-from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.uix.screenmanager import Screen
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ListProperty, ObjectProperty
 from kivy.lang.builder import Builder
 from kivy.core.window import Window
 from datetime import datetime
 from gui_strings import alarm_string
-from kivymd.uix.list import IconLeftWidget, IconRightWidget, ThreeLineAvatarIconListItem
-from functools import partial
 
 # TODO: cleanup code and organize
 
@@ -155,7 +153,6 @@ class AlarmFormScreen(Screen, FloatLayout):
         self.check_valid_description(alarm_dict["description"])
         self.check_valid_alarm_type(alarm_dict["alarm_type"])
         
-
     
     def load_time(self, time):
         time_str = time.strftime("%H:%M")
