@@ -51,6 +51,7 @@ class MainScreen(Screen, FloatLayout):
         alarm_form_screen = self.manager.screens[1]
         alarm_form_screen.form_toolbar.title = "Edit Alarm"
         alarm_form_screen.alarm_to_edit = alarm_to_edit
+        alarm_form_screen.load_alarm_to_edit_details()
 
         self.manager.transition.direction = 'left'
         self.manager.current = 'alarm_form'

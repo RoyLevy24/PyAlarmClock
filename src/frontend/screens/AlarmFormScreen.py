@@ -21,7 +21,6 @@ from functools import partial
 
 class AlarmFormScreen(Screen, FloatLayout):
     time_picker = ObjectProperty(None)
-    # check_face = ObjectProperty(None)
     check_days = ListProperty([])
 
     def __init__(self, **kwargs):
@@ -107,6 +106,39 @@ class AlarmFormScreen(Screen, FloatLayout):
     def check_valid_input(self):
         pass
 
+    
+    def load_time(self, time):
+        time_str = time.strftime("%H:%M")
+        self.time_picker.text = time_str
+    
+    def load_days(self, days):
+        for day in days:
+            self.check_days[day].active = True
+
+    def load_description(self, description):
+        self.alarm_desc.text = description
+
+    def load_alarm_type(self, alarm_type):
+        type_idx = alarm_type[0]
+        type_param = alarm_type[1]
+
+        for i in range(len(self.check_type)):
+            if i == type_idx:
+                self.check_type[i].active = True
+            else:
+                self.check_type[i].active = False
+
+        self.tf_alarm_param.text = type_param
+
+
+    def load_alarm_to_edit_details(self):
+        print(self.alarm_to_edit)
+        to_edit = self.alarm_to_edit
+        self.load_time(to_edit["time"])
+        self.load_days(to_edit["days"])
+        self.load_description(to_edit["description"])
+        self.load_alarm_type(to_edit["alarm_type"])
+
     def get_new_alarm_details(self):
         to_edit = self.alarm_to_edit
         alarm_id = AlarmIdGenerator.getInstance().get_next_id(
@@ -129,10 +161,11 @@ class AlarmFormScreen(Screen, FloatLayout):
             self.update_alarm_in_main(alarm_dict)
         else:
             self.add_alarm_in_main(alarm_dict)
+            self.reset_alarm_form()
+
 
         # message = {"type": ADD_ALARM, "payload": alarm_dict}
         # MessageReducer.getInstance().add_message(message)
-        self.reset_alarm_form()
 #-------------------------------------------------------------------------------------------------#
 
     
@@ -162,6 +195,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         alarm_item = main_screen.ids[alarm_id]
         self.set_alarm_details(alarm_item, alarm_dict, days_str)
         self.update_alarm_list_in_main(main_screen.alarm_list, alarm_dict)
+        self.alarm_to_edit = None
 
     def update_alarm_list_in_main(self, alarm_list, alarm_dict):
         alarm_in_list = self.alarm_to_edit
