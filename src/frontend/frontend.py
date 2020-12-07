@@ -27,6 +27,10 @@ sm.add_widget(AlarmActiveScreen())
 sm.add_widget(DismissSpeechScreen())
 
 class AlarmApp(MDApp):
+    """
+    This class is the entry-point of the application.
+    It is responsible for initialization, and displaying the Main Screen.
+    """
 
     def build(self):
         # sets color theme
