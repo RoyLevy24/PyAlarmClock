@@ -1,22 +1,23 @@
 import sys
+
 sys.path.append("./src/")
 
 
-from screens.AlarmFormScreen import *
-from screens.MainScreen import *
-from screens.AlarmActiveScreen import *
-from screens.DismissSpeechScreen import *
-
-from kivymd.app import MDApp
-from kivy.lang.builder import Builder
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.screenmanager import ScreenManager, Screen
-from gui_strings import screen_helper, alarm_string
-from kivy.properties import ListProperty, ObjectProperty
-from kivymd.uix.picker import MDTimePicker
-from kivy.core.window import Window
 from datetime import datetime
 
+from kivy.core.window import Window
+from kivy.lang.builder import Builder
+from kivy.properties import ListProperty, ObjectProperty
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.screenmanager import Screen, ScreenManager
+from kivymd.app import MDApp
+from kivymd.uix.picker import MDTimePicker
+
+from gui_strings import alarm_string, screen_helper
+from screens.AlarmActiveScreen import *
+from screens.AlarmFormScreen import *
+from screens.DismissSpeechScreen import *
+from screens.MainScreen import *
 
 Window.size = (360, 740)
 # Create a screen manager
