@@ -25,6 +25,7 @@ class AlarmFormScreen(Screen, FloatLayout):
     From this class the user can add/edit an alarm.
     """
 
+
     time_picker = ObjectProperty(None)
     check_days = ListProperty([])
 
@@ -34,6 +35,10 @@ class AlarmFormScreen(Screen, FloatLayout):
         self.MAX_DESC_SIZE = 50
         self.MAX_NUM_WORDS = 10
         self.MAX_STARE_TIME = 300
+
+        self.SPEECH_TYPE = 0
+        self.FACE_TYPE = 1
+        self.NONE_TYPE = 2
 
 #----------------------------------------reset actions--------------------------------------------#
     def reset_days(self):
@@ -52,7 +57,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         for type_checkbox in self.check_type:
             type_checkbox.active = False
         # checking the default checkbox (type None)
-        self.check_type[2].active = True
+        self.check_type[self.NONE_TYPE].active = True
         # reseting text field of alarm type
         self.select_none_alarm()
 
@@ -94,28 +99,44 @@ class AlarmFormScreen(Screen, FloatLayout):
 #--------------------------------------input actions----------------------------------------------#
 
     def select_alarm_type(self, hint_text="", disabled=True):
+        """
+        Sets up the text field for input regarding alarm type.
+        """
         self.tf_alarm_param.disabled = disabled
         self.tf_alarm_param.text = ""
         self.tf_alarm_param.hint_text = hint_text
 
     def select_face_alarm(self):
+        # setting text field for face alarm type
         self.select_alarm_type("Enter Staring Time (Seconds)", disabled=False)
 
     def select_speech_alarm(self):
+        # setting text field for speech alarm type
         self.select_alarm_type("Enter Num of Words", disabled=False)
 
     def select_none_alarm(self):
+        # setting text field for none alarm type
         self.select_alarm_type()
 
     def open_time_picker(self):
+        """
+        Opens up time picker dialog for selection of alarm time.
+        """
         time_dialog = MDTimePicker()
+        # binds a method that sets the time chosen
         time_dialog.bind(time=self.get_time_picker_time)
         time_dialog.open()
 
     def get_time_picker_time(self, instance, time):
+        """
+        Sets the time chosen by the user in the form.
+        """
         self.time_picker.text = time.strftime("%H:%M")
 
     def get_alarm_days_indexes(self):
+        """
+        Returns all the indexes of the days the use chose for the alarm
+        """
         check_days = self.check_days
         days_idx = []
         for i in range(len(check_days)):
@@ -124,11 +145,15 @@ class AlarmFormScreen(Screen, FloatLayout):
         return days_idx
 
     def get_alarm_type_index(self):
+        """
+        Returns the index of the type of alarm the user chose.
+        Returns None if the user haven't chose any.
+        """
         check_type = self.check_type
         for i in range(len(check_type)):
             if check_type[i].active:
                 return i
-        return -1
+        return None
 #-------------------------------------validate input actions--------------------------------------#
 
     def check_valid_days(self, days):
@@ -187,11 +212,14 @@ class AlarmFormScreen(Screen, FloatLayout):
         Checks if the alarm_type entered by the user is valid.
         """
         alarm_type_idx = alarm_type[0]
+        if alarm_type_idx == None:
+            raise Exception("You Must Select an Alarm Type!")
+
         alarm_type_param = alarm_type[1]
 
-        if alarm_type_idx == 0:
+        if alarm_type_idx == self.SPEECH_TYPE:
             self.check_valid_num_words(alarm_type_param)
-        elif alarm_type_idx == 1:
+        elif alarm_type_idx == self.FACE_TYPE:
             self.check_valid_stare_time(alarm_type_param)
 
 
@@ -269,7 +297,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         for i in range(len(self.check_type)):
             if i == type_idx:
                 self.check_type[i].active = True
-                if i != 2:
+                if i != self.NONE_TYPE:
                     self.tf_alarm_param.disabled = False 
             else:
                 self.check_type[i].active = False
@@ -290,6 +318,12 @@ class AlarmFormScreen(Screen, FloatLayout):
 
 
     def get_new_alarm_details(self):
+        """
+        Gets the alarm details the user entered from the form.
+
+        Raises:
+            Exception: If the details the user entered are not valid.
+        """
         to_edit = self.alarm_to_edit
         alarm_id = AlarmIdGenerator.getInstance().get_next_id(
         ) if to_edit == None else to_edit["alarm_id"]
@@ -308,19 +342,50 @@ class AlarmFormScreen(Screen, FloatLayout):
         }
 
         self.check_valid_input(alarm_dict)
+        alarm_params = self.create_alarm_params_for_logic(alarm_dict)
+        main_screen = self.manager.screens[0]
 
         if to_edit != None:
             self.update_alarm_in_main(alarm_dict)
+            main_screen.logic_manager.edit_alarm(*alarm_params)
         else:
             self.add_alarm_in_main(alarm_dict)
+            main_screen.logic_manager.add_alarm(*alarm_params)
             self.reset_alarm_form()
-    # TODO: connect GUI to Logic
-    # message = {"type": ADD_ALARM, "payload": alarm_dict}
-    # MessageReducer.getInstance().add_message(message)
+
+    def create_alarm_params_for_logic(self, alarm_dict):
+        alarm_id = alarm_dict["alarm_id"]
+        time = alarm_dict["time"]
+        days = alarm_dict["days"]
+        description = alarm_dict["description"]
+        (staring_time, num_words) = self.extract_alarm_type_params(alarm_dict["alarm_type"])
+
+        return [alarm_id, time, days, description, staring_time, num_words]
+
+    def extract_alarm_type_params(self, alarm_type):
+        type_num = alarm_type[0]
+        type_param = alarm_type[1]
+        staring_time = None
+        num_words = None
+
+        if type_num == self.SPEECH_TYPE:
+            num_words = type_param
+        elif type_num == self.FACE_TYPE:
+            staring_time = type_param
+
+        return (staring_time, num_words)
+
 #-------------------------------------------------------------------------------------------------#
 
     
-    def set_alarm_details(self, alarm_item, alarm_dict, days_str):
+    def set_alarm_item_details(self, alarm_item, alarm_dict, days_str):
+        """
+        Sets the alarm details from the form in a Widget that later
+        displayed on the main screen.
+
+        Args:
+            alarm_item (Widget): list item that displayed on the main screen 
+        """
         alarm_item.name = alarm_dict["alarm_id"]
         alarm_item.text = alarm_dict["time"].strftime("%H:%M")
         alarm_item.secondary_text = alarm_dict["description"]
@@ -332,7 +397,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         alarm_id = alarm_dict["alarm_id"]
 
         alarm_item = Builder.load_string(alarm_string)
-        self.set_alarm_details(alarm_item, alarm_dict, days_str)
+        self.set_alarm_item_details(alarm_item, alarm_dict, days_str)
 
         main_screen.alarm_list.append(alarm_dict)
         main_screen.ids.list.add_widget(alarm_item)
@@ -344,7 +409,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         alarm_id = alarm_dict["alarm_id"]
 
         alarm_item = main_screen.ids[alarm_id]
-        self.set_alarm_details(alarm_item, alarm_dict, days_str)
+        self.set_alarm_item_details(alarm_item, alarm_dict, days_str)
         self.update_alarm_list_in_main(main_screen.alarm_list, alarm_dict)
         self.alarm_to_edit = None
 

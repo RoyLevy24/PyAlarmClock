@@ -19,13 +19,17 @@ from screens.AlarmFormScreen import *
 from screens.DismissSpeechScreen import *
 from screens.MainScreen import *
 
+from backend.Logic.LogicManager import *
+
 Window.size = (360, 740)
 # Create a screen manager
+
+
 sm = ScreenManager()
 sm.add_widget(MainScreen(name="main"))
 sm.add_widget(AlarmFormScreen(name="alarm_form"))
-sm.add_widget(AlarmActiveScreen())
-sm.add_widget(DismissSpeechScreen())
+sm.add_widget(AlarmActiveScreen(name="alarm_active"))
+sm.add_widget(DismissSpeechScreen(name="dismiss_speech"))
 
 class AlarmApp(MDApp):
     """
@@ -37,7 +41,10 @@ class AlarmApp(MDApp):
         # sets color theme
         self.theme_cls.primary_palette = 'Purple'
         # create the main screen Widget
-        screen = Builder.load_string(screen_helper)
-        return screen
+        screen_manager = Builder.load_string(screen_helper)
+        main_screen = screen_manager.screens[0]
+        logic_manger = LogicManager()
+        main_screen.set_logic_manager(logic_manger)
+        return screen_manager
 
 AlarmApp().run()

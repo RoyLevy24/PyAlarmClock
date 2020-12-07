@@ -22,6 +22,11 @@ class MainScreen(Screen, FloatLayout):
         super(MainScreen, self).__init__(**kwargs)
         self.alarm_list = []
 
+    def set_logic_manager(self, logic_manager):
+        self.logic_manager = logic_manager
+        # TODO: add set_main_screen to LogicManager
+        self.logic_manager.set_main_screen(self)
+
     def find_alarm_by_id(self, alarm_list, alarm_id):
         """
         Finds an alarm in list by a given alarm_id
@@ -83,3 +88,14 @@ class MainScreen(Screen, FloatLayout):
         )
         # removes the alarm from the screen's view
         self.ids.list.remove_widget(self.ids[alarm_id])
+        self.logic_manager.delete_alarm(alarm_id)
+
+    def load_alarm_active_details(self, alarm_dict):
+        alarm_active_screen = self.manager.screens[2]
+
+        alarm_active_screen.alarm_active_time.text = alarm_dict["time"]
+        alarm_active_screen.alarm_active_desc.text = alarm_dict["description"]
+        alarm_active_screen.alarm_active_dismiss.on_press = alarm_dict["dismiss_func"]
+
+        self.manager.transition.direction = 'left'
+        self.manager.current = 'alarm_active'

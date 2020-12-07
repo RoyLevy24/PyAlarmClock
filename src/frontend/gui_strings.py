@@ -232,26 +232,28 @@ ScreenManager:
 <AlarmActiveScreen>
     name: 'alarm_active'
     MDToolbar:
-        title: "Alarm"
+        title: "Alarm Active"
         pos_hint: {"top": 1}
         elevation: 11
 
     MDBoxLayout:
-        id: "alarm_active_box"
+        id: alarm_active_box
         orientation: 'vertical'
         size_hint_y: .5
         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         padding: [20,20,20,20]
 
         MDLabel:
-            text: "12:00"
+            id: alarm_active_time
+            # text: "12:00"
             halign: "center"
             valign: "center"
             markup: True
             font_style: "H1"
 
         MDLabel:
-            text: "Test on Friday!"
+            id: alarm_active_desc
+            # text: "Test on Friday!"
             halign: "center"
             valign: "center"
             markup: True
@@ -261,10 +263,12 @@ ScreenManager:
         Label:
 
         MDFillRoundFlatIconButton:
+            id: alarm_active_dismiss
             icon: "cancel"
             text: "dismiss"
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             font_size: '30sp'
+            # TODO: add on_press from code
 
 <DismissSpeechScreen>
     name: 'dismiss_speech'
