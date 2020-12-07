@@ -10,7 +10,6 @@ import time
 
 class OpenEyesDetect():
 
-    # TODO: given a time calculate frame per seconds of device
     __instance = None
 
     @staticmethod
@@ -23,7 +22,7 @@ class OpenEyesDetect():
         if OpenEyesDetect.__instance != None:
             raise Exception("This class is a singleton!")
         else:
-            self.PREDICTOR_PATH = "./src/OpenEyesDetection/assets/predictors/face_landmarks_predictor.dat"
+            self.PREDICTOR_PATH = "./src/backend/OpenEyesDetection/assets/predictors/face_landmarks_predictor.dat"
             self.camera_num = camera_num
             self.ear_threshold = ear_threshold
             OpenEyesDetect.__instance = self  

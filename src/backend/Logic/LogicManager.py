@@ -1,8 +1,6 @@
 import sys
 sys.path.append("./src/")
 
-from service.MessageReducer import *
-from service.actions.actions_types import ACTIVE_ALARM
 from backend.AlarmClock.SpeechAlarm import *
 from backend.AlarmClock.OpenEyesAlarm import *
 from backend.AlarmClock.Alarm import *
@@ -18,7 +16,7 @@ class LogicManager():
     def __init__(self):
         self.alarm_list = []
         self.alarms_queue = queue.Queue()
-        # TODO: uncomment self.init_threads() 
+        self.init_threads() 
 
     def set_main_screen(self, main_screen):
         self.main_screen = main_screen
@@ -33,18 +31,21 @@ class LogicManager():
         self.alarm_time_checker.start()
         self.alarm_executer.start()
 
-        self.alarm_time_checker.join()
-        self.alarm_executer.join()
+        # self.alarm_time_checker.join()
+        # self.alarm_executer.join()
 
 
     def create_alarm(self, alarm_id, time, days, description, staring_time=None, num_words=None):
-        # TODO: deal with ordinary alarm
         alarm = None
         if staring_time:
             alarm = OpenEyesAlarm(alarm_id, time, days,
                                   description, staring_time)
-        else:
+        elif num_words:
             alarm = SpeechAlarm(alarm_id, time, days, description, num_words)
+        
+        else:
+            alarm = Alarm(alarm_id, time, days, description, num_words)
+
         return alarm
 
     def add_alarm(self, alarm_id, time, days, description, staring_time=None, num_words=None):
@@ -64,7 +65,7 @@ class LogicManager():
             to_edit_alarm.description = description
             to_edit_alarm.staring_time = staring_time
             to_edit_alarm.num_words = num_words
-            
+
 
     def get_alarm_by_id(self, alarm_id):
         alarms = list(filter(lambda a: a.alarm_id ==
@@ -78,7 +79,7 @@ class LogicManager():
             return False
 
         curr_day = curr_datetime.weekday()
-        if Days(curr_day) not in alarm.days:
+        if curr_day not in alarm.days:
             return False
 
         alarm_datetime = datetime.datetime.combine(
@@ -89,20 +90,21 @@ class LogicManager():
             return True
 
     def nearly_active_alarm_checker(self):
+        print("time checker")
         while True:
             curr_time = datetime.datetime.now().replace(second=0, microsecond=0)
             for alarm in self.alarm_list:
                 if self.alarm_should_ring(curr_time, alarm):
-                    # alarm_message = {"type": ACTIVE_ALARM, "payload": alarm}
-                    # MessageReducer.getInstance().add_message(alarm_message)
-                    # TODO: fix
+                    self.alarms_queue.put(alarm)
                     time.sleep(60)
 
     def execute_alarm(self):
+        print("alarm checker")
         while True:
             alarm = self.alarms_queue.get()
-            alarm.execute_alarm()
-
-    # mocking threading communication
-    # add_alarm("some id",datetime.time(7, 32), [Days.Mon], "mock_alarm", num_words=6)
-
+            alarm_details_dict = {
+                "time": alarm.time.strftime("%H:%M"),
+                "description": alarm.description,
+                "dismiss_func": alarm.execute_alarm,
+            }
+            self.main_screen.load_alarm_active_details(alarm_details_dict)

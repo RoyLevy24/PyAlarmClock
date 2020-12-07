@@ -369,9 +369,9 @@ class AlarmFormScreen(Screen, FloatLayout):
         num_words = None
 
         if type_num == self.SPEECH_TYPE:
-            num_words = type_param
+            num_words = int(type_param)
         elif type_num == self.FACE_TYPE:
-            staring_time = type_param
+            staring_time = int(type_param)
 
         return (staring_time, num_words)
 

@@ -6,7 +6,7 @@ screen_helper = """
 ScreenManager:
     MainScreen:
     AlarmFormScreen:
-    # AlarmActiveScreen:
+    AlarmActiveScreen:
     # DismissSpeechScreen:
 
 
@@ -231,6 +231,10 @@ ScreenManager:
 
 <AlarmActiveScreen>
     name: 'alarm_active'
+
+    alarm_active_time: alarm_active_time 
+    alarm_active_desc: alarm_active_desc
+    alarm_active_dismiss: alarm_active_dismiss
     MDToolbar:
         title: "Alarm Active"
         pos_hint: {"top": 1}
@@ -245,7 +249,6 @@ ScreenManager:
 
         MDLabel:
             id: alarm_active_time
-            # text: "12:00"
             halign: "center"
             valign: "center"
             markup: True
@@ -268,7 +271,6 @@ ScreenManager:
             text: "dismiss"
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             font_size: '30sp'
-            # TODO: add on_press from code
 
 <DismissSpeechScreen>
     name: 'dismiss_speech'
