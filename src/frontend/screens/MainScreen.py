@@ -13,6 +13,8 @@ from kivy.lang.builder import Builder
 from kivy.core.window import Window
 from frontend.gui_strings import screen_helper
 from datetime import datetime
+from kivymd.uix.button import MDRaisedButton,MDFlatButton
+from kivymd.uix.dialog import MDDialog
 
 
 
@@ -77,6 +79,33 @@ class MainScreen(Screen, FloatLayout):
         self.manager.transition.direction = 'left'
         self.manager.current = 'alarm_form'
 
+    def close_delete_dialog(self, alarm_id, *args, delete=False):
+        def close(*args):
+            if delete:
+                self.delete_alarm(alarm_id)
+            self.delete_dialog.dismiss(force=True)
+        return close
+
+    def show_delete_alarm_dialog(self, alarm_id):
+        self.delete_dialog = MDDialog(
+            title="Delete Alarm?",
+            text="This alarm we no longer be active",
+            pos_hint={"center_x":.5, "center_y":.5},
+            size_hint_x=.8,
+            buttons=[
+                MDFlatButton(
+                    text="CANCEL",
+                    on_press=self.close_delete_dialog(alarm_id, delete=False)
+                    
+                ),
+                MDRaisedButton(
+                    text="DELETE",
+                    on_press=self.close_delete_dialog(alarm_id, delete=True)
+                ),
+            ],
+        )
+        self.delete_dialog.open()
+
     def delete_alarm(self, alarm_id):
         """
         Deletes an alarm with a given alarm_id from the main screen
@@ -92,6 +121,7 @@ class MainScreen(Screen, FloatLayout):
         # removes the alarm from the screen's view
         self.ids.list.remove_widget(self.ids[alarm_id])
         self.logic_manager.delete_alarm(alarm_id)
+
 
     def load_alarm_active_details(self, alarm_dict):
         alarm_active_screen = self.manager.screens[2]

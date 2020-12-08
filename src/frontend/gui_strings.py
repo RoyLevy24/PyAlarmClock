@@ -356,5 +356,5 @@ ThreeLineAvatarIconListItem:
 
     IconRightWidget:
         icon: "delete"
-        on_release: app.root.screens[0].delete_alarm(root.name)
+        on_release: app.root.screens[0].show_delete_alarm_dialog(root.name)
 """
