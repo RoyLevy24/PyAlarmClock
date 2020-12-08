@@ -7,3 +7,4 @@ face recognition
 dlib
 kivymd
 cv2
+beautifulsoup4

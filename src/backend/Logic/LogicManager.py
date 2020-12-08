@@ -13,7 +13,9 @@ import time
 
 class LogicManager():
 
-    def __init__(self):
+    def __init__(self, args):
+        print(args)
+        self.args = args
         self.alarm_list = []
         self.alarms_queue = queue.Queue()
         self.init_threads() 
@@ -39,7 +41,7 @@ class LogicManager():
         alarm = None
         if staring_time:
             alarm = OpenEyesAlarm(alarm_id, self.main_screen, time, days,
-                                  description, staring_time)
+                                  description, staring_time, camera_num=self.args.camera_num, ear=self.args.ear)
         elif num_words:
             alarm = SpeechAlarm(alarm_id, self.main_screen, time, days, description, num_words)
         

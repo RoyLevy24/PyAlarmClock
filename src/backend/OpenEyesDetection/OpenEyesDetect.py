@@ -1,3 +1,7 @@
+
+import sys
+sys.path.append("backend/OpenEyesDetection/")
+import os
 import cv2
 import dlib
 import imutils
@@ -6,7 +10,6 @@ from imutils.video import VideoStream
 from scipy.spatial import distance as dist
 import math
 import time
-
 
 class OpenEyesDetect():
 
@@ -18,13 +21,11 @@ class OpenEyesDetect():
             OpenEyesDetect()
         return OpenEyesDetect.__instance
     
-    def __init__(self, camera_num=1, ear_threshold=0.31):
+    def __init__(self):
         if OpenEyesDetect.__instance != None:
             raise Exception("This class is a singleton!")
         else:
-            self.PREDICTOR_PATH = "./src/backend/OpenEyesDetection/assets/predictors/face_landmarks_predictor.dat"
-            self.camera_num = camera_num
-            self.ear_threshold = ear_threshold
+            self.PREDICTOR_PATH = os.path.join(os.path.dirname(__file__),"face_landmarks_predictor.dat")
             OpenEyesDetect.__instance = self  
 
     def get_frames_per_seconds(self, camera_num):
@@ -61,7 +62,7 @@ class OpenEyesDetect():
         return ear
 
 
-    def detect_open_eyes(self, staring_time):
+    def detect_open_eyes(self, staring_time, camera_num, ear_threshold):
         open_eyes_frames_num = 0
 
         detector = dlib.get_frontal_face_detector()
@@ -74,10 +75,10 @@ class OpenEyesDetect():
         print("[INFO] starting video stream thread...")
         print("[INFO] print q to quit...")
 
-        fps = self.get_frames_per_seconds(self.camera_num)
+        fps = self.get_frames_per_seconds(camera_num)
         # TODO: need to calculate estimated frames. Move 0.6 to variable
         consec_frames_threshold = math.floor(staring_time * fps * 0.6)
-        vs = VideoStream(self.camera_num).start()
+        vs = VideoStream(camera_num).start()
 
         while open_eyes_frames_num <= consec_frames_threshold:
             frame = vs.read()
@@ -103,7 +104,7 @@ class OpenEyesDetect():
                 cv2.drawContours(frame, [left_eye_hull], -1, (0, 255, 0), 1)
                 cv2.drawContours(frame, [right_eye_hull], -1, (0, 255, 0), 1)
 
-                if (ear >= self.ear_threshold):
+                if (ear >= ear_threshold):
                     if (open_eyes_frames_num <= consec_frames_threshold):
                         open_eyes_frames_num += 1
 

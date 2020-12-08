@@ -39,12 +39,18 @@ class AlarmApp(MDApp):
     It is responsible for initialization, and displaying the Main Screen.
     """
 
+    def __init__(self, args, **kwargs):
+        super(MDApp, self).__init__(**kwargs)
+        self.args = args
+
     def build(self):
+        self.icon = "frontend/assets/alarm_clock_icon.png"
+        self.title = "PyAlarmClock"
         # sets color theme
         self.theme_cls.primary_palette = 'Purple'
         # create the main screen Widget
         screen_manager = Builder.load_string(screen_helper)
         main_screen = screen_manager.screens[0]
-        logic_manger = LogicManager()
+        logic_manger = LogicManager(self.args)
         main_screen.set_logic_manager(logic_manger)
         return screen_manager
