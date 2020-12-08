@@ -25,16 +25,27 @@ class SpeechAlarm(Alarm):
 
         go_to_next_word = lambda: self.load_word_screen(rest_word_list)
         next_button_on_press = super(SpeechAlarm, self).execute_alarm if len(rest_word_list) == 0 else go_to_next_word
-        mic_on_press = next_button_on_press if RecognizeWords.getInstance().recognize_word(current_word.title) else lambda: None
+        # mic_on_press = next_button_on_press if RecognizeWords.getInstance().recognize_word(current_word.title) else lambda: None
+        mic_on_press = self.get_mic_on_press(next_button_on_press, current_word.title)
         pronounce_on_press = lambda: playsound(current_word.pronounce_audio)
 
         dismiss_speech_screen.dismiss_speech_title.text = "Dismiss Speech"
         dismiss_speech_screen.dismiss_speech_word.text = current_word.title
         dismiss_speech_screen.dismiss_speech_pronounce.text = current_word.pronounce
         dismiss_speech_screen.dismiss_speech_play_word.on_press = pronounce_on_press
-        dismiss_speech_screen.dismiss_speech_word_desc = current_word.meaning
+        dismiss_speech_screen.dismiss_speech_word_desc.text = current_word.meaning
         dismiss_speech_screen.dismiss_speech_record.on_press = mic_on_press
         dismiss_speech_screen.dismiss_speech_bottom.right_action_items = [["arrow-right-bold", lambda x: next_button_on_press()]]
 
         dismiss_speech_screen.manager.transition.direction = 'left'
         dismiss_speech_screen.manager.current = 'dismiss_speech'
+
+
+    def get_mic_on_press(self, next_button_on_press, word_title):
+        def mic_on_press():
+            if RecognizeWords.getInstance().recognize_word(word_title):
+                return next_button_on_press()
+            else:
+                return lambda: None
+        
+        return mic_on_press

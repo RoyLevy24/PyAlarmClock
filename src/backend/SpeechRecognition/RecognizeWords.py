@@ -28,16 +28,20 @@ class RecognizeWords():
             RecognizeWords.__instance = self
 
     def are_similar_words(self, actual_word, said_word):
+        actual_word = actual_word.lower()
+        said_word = said_word.lower()
         ratio = SequenceMatcher(None, actual_word, said_word).ratio()
         print(ratio)
         return ratio >= self.match_ratio
 
     def recognize_word(self, actual_word):
+        print("in mic")
         with self.microphone as source:
             self.recognizer.adjust_for_ambient_noise(source)
             audio = self.recognizer.listen(source)
             try:
                 said_word = self.recognizer.recognize_google(audio)
+                print(said_word)
                 return self.are_similar_words(actual_word, said_word)
             except Exception as e:
                 # TODO: change exception message

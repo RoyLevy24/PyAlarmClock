@@ -94,7 +94,6 @@ class LogicManager():
             return True
 
     def nearly_active_alarm_checker(self):
-        print("time checker")
         while True:
             curr_time = datetime.datetime.now().replace(second=0, microsecond=0)
             for alarm in self.alarm_list:
@@ -103,7 +102,6 @@ class LogicManager():
                     time.sleep(60)
 
     def execute_alarm(self):
-        print("alarm checker")
         while True:
             alarm = self.alarms_queue.get()
             alarm_details_dict = {

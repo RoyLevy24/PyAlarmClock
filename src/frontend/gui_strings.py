@@ -323,11 +323,10 @@ ScreenManager:
         
         MDLabel:
             id: dismiss_speech_word_desc
-            # text: "This is the word's Description"
-            halign: "center"
-            valign: "center"
-            markup: True
-            font_style: "H6"
+            # halign: "center"
+            # valign: "center"
+            # markup: True
+            # font_style: "H6"
             multiline: True
 
         MDFloatingActionButton:
@@ -341,8 +340,6 @@ ScreenManager:
         id: dismiss_speech_bottom
         title: "Next Word"
         pos_hint: {"bottom": 1}
-        # TODO: change on_press
-        # right_action_items: [["arrow-right-bold", lambda x: print("next word")]]
 
 """
 

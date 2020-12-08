@@ -1,6 +1,8 @@
 import sys
 
 sys.path.append("./src/")
+sys.path.append("./src/frontend/")
+sys.path.append(".")
 
 from kivymd.uix.picker import MDTimePicker
 from kivymd.app import MDApp
@@ -9,8 +11,9 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ListProperty, ObjectProperty
 from kivy.lang.builder import Builder
 from kivy.core.window import Window
-from gui_strings import screen_helper
+from frontend.gui_strings import screen_helper
 from datetime import datetime
+
 
 
 class MainScreen(Screen, FloatLayout):
@@ -99,3 +102,21 @@ class MainScreen(Screen, FloatLayout):
 
         self.manager.transition.direction = 'left'
         self.manager.current = 'alarm_active'
+
+
+
+# import multiprocessing
+# from playsound import playsound
+
+# p = multiprocessing.Process(target=playsound, args=("file.mp3",))
+# p.start()
+# input("press ENTER to stop playback")
+# p.terminate()
+
+        # alarm_ringtone_proc = multiprocessing.Process(target=playsound, daemon=True,  args=("./src/frontend/assets/alarm_clock_ringtone.mp3",))
+
+        # def dismiss_alarm(alarm_ringtone_proc, dismiss_func):
+        #     def dismiss():
+        #         alarm_ringtone_proc.terminate()
+        #         dismiss_func()
+        #     return dismiss

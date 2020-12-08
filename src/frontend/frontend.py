@@ -1,7 +1,9 @@
 import sys
 
+sys.path.append(".")
 sys.path.append("./src/")
-
+sys.path.append("./src/frontend/")
+sys.path.append("./src/frontend/screens")
 
 from datetime import datetime
 
@@ -13,11 +15,11 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.app import MDApp
 from kivymd.uix.picker import MDTimePicker
 
-from gui_strings import alarm_string, screen_helper
-from screens.AlarmActiveScreen import *
-from screens.AlarmFormScreen import *
-from screens.DismissSpeechScreen import *
-from screens.MainScreen import *
+from frontend.gui_strings import alarm_string, screen_helper
+from frontend.screens.AlarmActiveScreen import *
+from frontend.screens.AlarmFormScreen import *
+from frontend.screens.DismissSpeechScreen import *
+from frontend.screens.MainScreen import *
 
 from backend.Logic.LogicManager import *
 
@@ -47,4 +49,3 @@ class AlarmApp(MDApp):
         main_screen.set_logic_manager(logic_manger)
         return screen_manager
 
-AlarmApp().run()

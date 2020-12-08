@@ -1,21 +1,24 @@
 import sys
 import weakref
-sys.path.append("./src/")
 
-from service.MessageReducer import *
+sys.path.append(".")
+sys.path.append("../")
+sys.path.append("./src/")
+sys.path.append("./src/frontend/")
+
+from datetime import datetime
+from frontend.gui_strings import alarm_string
+from kivy.core.window import Window
+from kivy.lang.builder import Builder
+from kivy.properties import ListProperty, ObjectProperty
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.screenmanager import Screen
+from kivymd.app import MDApp
+from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.picker import MDTimePicker
 from service.AlarmIdGenerator import *
 from service.utils import *
-from kivymd.uix.picker import MDTimePicker
-from kivymd.app import MDApp
-from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDRaisedButton
-from kivy.uix.screenmanager import Screen
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ListProperty, ObjectProperty
-from kivy.lang.builder import Builder
-from kivy.core.window import Window
-from datetime import datetime
-from gui_strings import alarm_string
 
 # TODO: cleanup code and organize
 
@@ -123,6 +126,10 @@ class AlarmFormScreen(Screen, FloatLayout):
         Opens up time picker dialog for selection of alarm time.
         """
         time_dialog = MDTimePicker()
+        # getting the previous time text in the button
+        previous_time = datetime.strptime(self.time_picker.text, '%H:%M').time()
+        # setting the previous time in the dialog
+        time_dialog.set_time(previous_time)
         # binds a method that sets the time chosen
         time_dialog.bind(time=self.get_time_picker_time)
         time_dialog.open()
