@@ -1,12 +1,6 @@
-import sys
 import weakref
-
-sys.path.append(".")
-sys.path.append("../")
-sys.path.append("./src/")
-sys.path.append("./src/frontend/")
-
 from datetime import datetime
+
 from frontend.gui_strings import alarm_string
 from kivy.core.window import Window
 from kivy.lang.builder import Builder
@@ -20,14 +14,12 @@ from kivymd.uix.picker import MDTimePicker
 from service.AlarmIdGenerator import *
 from service.utils import *
 
-# TODO: cleanup code and organize
 
 class AlarmFormScreen(Screen, FloatLayout):
     """
     This class responsible for displaying add/edit form screen for the alarms.
     From this class the user can add/edit an alarm.
     """
-
 
     time_picker = ObjectProperty(None)
     check_days = ListProperty([])
@@ -127,7 +119,8 @@ class AlarmFormScreen(Screen, FloatLayout):
         """
         time_dialog = MDTimePicker()
         # getting the previous time text in the button
-        previous_time = datetime.strptime(self.time_picker.text, '%H:%M').time()
+        previous_time = datetime.strptime(
+            self.time_picker.text, '%H:%M').time()
         # setting the previous time in the dialog
         time_dialog.set_time(previous_time)
         # binds a method that sets the time chosen
@@ -182,7 +175,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         """
         if len(description) > self.MAX_DESC_SIZE:
             raise Exception(f'Max Description Length is {self.MAX_DESC_SIZE}!')
-    
+
     def check_valid_num_words(self, num_words):
         """
         Checks if the number of words for speech_alarm entered by the user is valid.
@@ -192,7 +185,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         """
         if not is_positive_int(num_words):
             raise Exception("Num Words Must be a positive int!")
-            
+
         else:
             num_words = int(num_words)
             if num_words > self.MAX_NUM_WORDS:
@@ -213,7 +206,6 @@ class AlarmFormScreen(Screen, FloatLayout):
             if stare_time > self.MAX_STARE_TIME:
                 raise Exception(f'Max Staring Time is {self.MAX_STARE_TIME}!')
 
-
     def check_valid_alarm_type(self, alarm_type):
         """
         Checks if the alarm_type entered by the user is valid.
@@ -229,14 +221,13 @@ class AlarmFormScreen(Screen, FloatLayout):
         elif alarm_type_idx == self.FACE_TYPE:
             self.check_valid_stare_time(alarm_type_param)
 
-
     def check_valid_input(self, alarm_dict):
         """
         Checks if the parametes entered by the user for an alarm is valid.
 
         Args:
             alarm_dict (dict): A dictionary containing the alarm details
-        
+
         Raises:
             Exception: If the alarm details in @alarm_dict are not valid.
         """
@@ -259,15 +250,16 @@ class AlarmFormScreen(Screen, FloatLayout):
         """
         self.error_dialog = MDDialog(
             text=error_str,
-            pos_hint={"center_x":.5, "center_y":.5},
+            pos_hint={"center_x": .5, "center_y": .5},
             size_hint_x=.8,
-            buttons=[MDRaisedButton(text="DISCARD", on_press=self.dialog_close)]
+            buttons=[MDRaisedButton(
+                text="DISCARD", on_press=self.dialog_close)]
         )
         self.error_dialog.open()
 
 #-------------------------------------------------------------------------------------------------#
-        
-    
+
+#-----------------------------------update view actions-------------------------------------------#
     def load_time(self, time):
         """
         Loads a time to the form.
@@ -277,7 +269,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         """
         time_str = time.strftime("%H:%M")
         self.time_picker.text = time_str
-    
+
     def load_days(self, days):
         """
         Checks all checkboxes of the days in the form based upon a given indexes for the days.
@@ -305,12 +297,11 @@ class AlarmFormScreen(Screen, FloatLayout):
             if i == type_idx:
                 self.check_type[i].active = True
                 if i != self.NONE_TYPE:
-                    self.tf_alarm_param.disabled = False 
+                    self.tf_alarm_param.disabled = False
             else:
                 self.check_type[i].active = False
         # setting the param string in the form
         self.tf_alarm_param.text = type_param
-
 
     def load_alarm_to_edit_details(self):
         """
@@ -322,7 +313,76 @@ class AlarmFormScreen(Screen, FloatLayout):
         self.load_description(to_edit["description"])
         self.load_alarm_type(to_edit["alarm_type"])
 
+    def set_alarm_item_details(self, alarm_item, alarm_dict, days_str):
+        """
+        Sets the alarm details from the form in a Widget that later
+        displayed on the main screen.
 
+        Args:
+            alarm_item (Widget): list item that displayed on the main screen 
+        """
+        alarm_item.name = alarm_dict["alarm_id"]
+        alarm_item.text = alarm_dict["time"].strftime("%H:%M")
+        alarm_item.secondary_text = alarm_dict["description"]
+        alarm_item.tertiary_text = days_str
+
+    def add_alarm_in_main(self, alarm_dict):
+        """
+        Adds an alarm to the main screen
+
+        Args:
+            alarm_dict (dict): dictionary contaning the alarm's details.
+        """
+        main_screen = self.manager.screens[0]
+        # getting a string represanting alarm days
+        days_str = get_days_str(alarm_dict["days"])
+        alarm_id = alarm_dict["alarm_id"]
+
+        # Loading an alarm_item Kivy Widget
+        alarm_item = Builder.load_string(alarm_string)
+        self.set_alarm_item_details(alarm_item, alarm_dict, days_str)
+
+        # adds the alarm to list in the main screen
+        main_screen.alarm_list.append(alarm_dict)
+        # adds the alarm to the list view in the main screen
+        main_screen.ids.list.add_widget(alarm_item)
+        # holding up a reference for the alarm widget for deletion
+        main_screen.ids[alarm_id] = weakref.proxy(alarm_item)
+
+    def update_alarm_in_main(self, alarm_dict):
+        """
+        Edits an alarm in the main screen
+
+        Args:
+            alarm_dict (dict): dictionary contaning the alarm's details.
+        """
+        main_screen = self.manager.screens[0]
+        days_str = get_days_str(alarm_dict["days"])
+        alarm_id = alarm_dict["alarm_id"]
+
+        alarm_item = main_screen.ids[alarm_id]
+        self.set_alarm_item_details(alarm_item, alarm_dict, days_str)
+        self.update_alarm_list_in_main(alarm_dict)
+        # indicates that we finished editing the alarm
+        self.alarm_to_edit = None
+
+    def update_alarm_list_in_main(self, alarm_dict):
+        """
+        Updating an alarm_item Widget in the main screen.
+
+        Args:
+            alarm_dict (dict): dictionary contaning the alarm's details.
+        """
+        alarm_in_list = self.alarm_to_edit
+
+        alarm_in_list["time"] = alarm_dict["time"]
+        alarm_in_list["days"] = alarm_dict["days"]
+        alarm_in_list["alarm_type"] = alarm_dict["alarm_type"]
+        alarm_in_list["description"] = alarm_dict["description"]
+
+#-------------------------------------------------------------------------------------------------#
+
+#----------------------------------form screen main actions---------------------------------------#
 
     def get_new_alarm_details(self):
         """
@@ -352,6 +412,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         alarm_params = self.create_alarm_params_for_logic(alarm_dict)
         main_screen = self.manager.screens[0]
 
+        # performing create/edit alarm in the logic
         if to_edit != None:
             self.update_alarm_in_main(alarm_dict)
             main_screen.logic_manager.edit_alarm(*alarm_params)
@@ -361,15 +422,24 @@ class AlarmFormScreen(Screen, FloatLayout):
             self.reset_alarm_form()
 
     def create_alarm_params_for_logic(self, alarm_dict):
+        """
+        Transform a dictionary contating alarm details to list of
+        parameters suitable to transfer to the LogicManager
+        """
         alarm_id = alarm_dict["alarm_id"]
         time = alarm_dict["time"]
         days = alarm_dict["days"]
         description = alarm_dict["description"]
-        (staring_time, num_words) = self.extract_alarm_type_params(alarm_dict["alarm_type"])
+        (staring_time, num_words) = self.extract_alarm_type_params(
+            alarm_dict["alarm_type"])
 
         return [alarm_id, time, days, description, staring_time, num_words]
 
     def extract_alarm_type_params(self, alarm_type):
+        """
+        Returns a tuple containing staring time and number of words for an alarm.
+        At least one them we bill returned as None.
+        """
         type_num = alarm_type[0]
         type_param = alarm_type[1]
         staring_time = None
@@ -383,51 +453,3 @@ class AlarmFormScreen(Screen, FloatLayout):
         return (staring_time, num_words)
 
 #-------------------------------------------------------------------------------------------------#
-
-    
-    def set_alarm_item_details(self, alarm_item, alarm_dict, days_str):
-        """
-        Sets the alarm details from the form in a Widget that later
-        displayed on the main screen.
-
-        Args:
-            alarm_item (Widget): list item that displayed on the main screen 
-        """
-        alarm_item.name = alarm_dict["alarm_id"]
-        alarm_item.text = alarm_dict["time"].strftime("%H:%M")
-        alarm_item.secondary_text = alarm_dict["description"]
-        alarm_item.tertiary_text = days_str
-
-    def add_alarm_in_main(self, alarm_dict):
-        main_screen = self.manager.screens[0]
-        days_str = get_days_str(alarm_dict["days"])
-        alarm_id = alarm_dict["alarm_id"]
-
-        alarm_item = Builder.load_string(alarm_string)
-        self.set_alarm_item_details(alarm_item, alarm_dict, days_str)
-
-        main_screen.alarm_list.append(alarm_dict)
-        main_screen.ids.list.add_widget(alarm_item)
-        main_screen.ids[alarm_id] = weakref.proxy(alarm_item)
-        
-    def update_alarm_in_main(self, alarm_dict):
-        main_screen = self.manager.screens[0]
-        days_str = get_days_str(alarm_dict["days"])
-        alarm_id = alarm_dict["alarm_id"]
-
-        alarm_item = main_screen.ids[alarm_id]
-        self.set_alarm_item_details(alarm_item, alarm_dict, days_str)
-        self.update_alarm_list_in_main(main_screen.alarm_list, alarm_dict)
-        self.alarm_to_edit = None
-
-    def update_alarm_list_in_main(self, alarm_list, alarm_dict):
-        alarm_in_list = self.alarm_to_edit
-
-        alarm_in_list["time"] = alarm_dict["time"]
-        alarm_in_list["days"] = alarm_dict["days"]
-        alarm_in_list["alarm_type"] = alarm_dict["alarm_type"]
-        alarm_in_list["description"] = alarm_dict["description"]
-
-
-
-
