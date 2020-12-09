@@ -1,7 +1,8 @@
-# This module contains utility functions for use throughout the project
+"""This module contains utility functions used throughout the project"""
 
-import re
 import os
+import re
+
 
 def get_days_str(days_idx):
     """
@@ -25,4 +26,7 @@ def is_positive_int(s):
 
 
 def get_abs_path(rel_path):
+    """
+    Retruns an absolute path from a relative path.
+    """
     return os.path.join(os.path.dirname(__file__), rel_path)

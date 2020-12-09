@@ -1,16 +1,13 @@
-from backend.WordOfTheDay.WordOfTheDay import *
-import speech_recognition as sr
 from difflib import SequenceMatcher
-import sys
 
-sys.path.append("./src/")
+import speech_recognition as sr
+from backend.WordOfTheDay.WordOfTheDay import *
 
 
 class RecognizeWords():
 
-    # TODO: Need to be singleton
     __instance = None
-    
+
     @staticmethod
     def getInstance():
         if RecognizeWords.__instance == None:
@@ -35,7 +32,6 @@ class RecognizeWords():
         return ratio >= self.match_ratio
 
     def recognize_word(self, actual_word):
-        print("in mic")
         with self.microphone as source:
             self.recognizer.adjust_for_ambient_noise(source)
             audio = self.recognizer.listen(source)
@@ -51,12 +47,3 @@ class RecognizeWords():
         wod = WordOfTheDay(num_words=num_words)
         words_list = wod.get_words_of_the_day()
         return words_list
-
-    # def recognize_words(self, num_words):
-    #     wod = WordOfTheDay(num_words=num_words)
-    #     words_list = wod.get_words_of_the_day()
-
-    #     for word_item in words_list:
-    #         print(word_item.title)
-    #         recognize_word(word_item.title)
-    #         print("rec")
