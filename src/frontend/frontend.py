@@ -14,12 +14,14 @@ from frontend.screens.AlarmActiveScreen import *
 from frontend.screens.AlarmFormScreen import *
 from frontend.screens.DismissSpeechScreen import *
 from frontend.screens.MainScreen import *
+from frontend.screens.EnterScreen import *
 
 # setting up default window size
 Window.size = (360, 740)
 
 # Create a screen manager
 sm = ScreenManager()
+sm.add_widget(EnterScreen(name="enter"))
 sm.add_widget(MainScreen(name="main"))
 sm.add_widget(AlarmFormScreen(name="alarm_form"))
 sm.add_widget(AlarmActiveScreen(name="alarm_active"))
@@ -43,7 +45,7 @@ class AlarmApp(MDApp):
         self.theme_cls.primary_palette = 'Purple'
         # create the main screen Widget
         screen_manager = Builder.load_string(screen_helper)
-        main_screen = screen_manager.screens[0]
+        main_screen = screen_manager.screens[1]
         logic_manger = LogicManager(self.args)
         main_screen.set_logic_manager(logic_manger)
         return screen_manager

@@ -46,7 +46,7 @@ class MainScreen(Screen, FloatLayout):
         Creates alarm and adds it to the main screen
         """
         # get the alarm_form screen
-        alarm_form_screen = self.manager.screens[1]
+        alarm_form_screen = self.manager.screens[2]
         alarm_form_screen.form_toolbar.title = "Add Alarm"
         alarm_form_screen.check_true_curr_weekday()
 
@@ -61,7 +61,7 @@ class MainScreen(Screen, FloatLayout):
         alarm_to_edit = self.find_alarm_by_id(self.alarm_list, alarm_id)
 
         # get the alarm_form screen
-        alarm_form_screen = self.manager.screens[1]
+        alarm_form_screen = self.manager.screens[2]
         alarm_form_screen.form_toolbar.title = "Edit Alarm"
         # set alarm_to_edit in the alarm_form
         alarm_form_screen.alarm_to_edit = alarm_to_edit
@@ -130,7 +130,7 @@ class MainScreen(Screen, FloatLayout):
             alarm_dict (dict): a dictionary containing the alarm's details.
         """
         # getting the screen
-        alarm_active_screen = self.manager.screens[2]
+        alarm_active_screen = self.manager.screens[3]
         # setting up details
         alarm_active_screen.alarm_active_time.text = alarm_dict["time"]
         alarm_active_screen.alarm_active_desc.text = alarm_dict["description"]

@@ -1,6 +1,7 @@
 numpy
 scipy
 pyaudio
+pygame
 imutils
 opencv
 cmake

@@ -45,7 +45,7 @@ class SpeechAlarm(Alarm):
         word_list (list(WordItem)): list containing details of all the words the user needs to speak.
         """
         # getting the screen
-        dismiss_speech_screen = self.main_screen.manager.screens[3]
+        dismiss_speech_screen = self.main_screen.manager.screens[4]
         current_word = word_list[0]
         rest_word_list = word_list[1:]
 

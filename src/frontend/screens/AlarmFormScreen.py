@@ -333,7 +333,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         Args:
             alarm_dict (dict): dictionary contaning the alarm's details.
         """
-        main_screen = self.manager.screens[0]
+        main_screen = self.manager.screens[1]
         # getting a string represanting alarm days
         days_str = get_days_str(alarm_dict["days"])
         alarm_id = alarm_dict["alarm_id"]
@@ -356,7 +356,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         Args:
             alarm_dict (dict): dictionary contaning the alarm's details.
         """
-        main_screen = self.manager.screens[0]
+        main_screen = self.manager.screens[1]
         days_str = get_days_str(alarm_dict["days"])
         alarm_id = alarm_dict["alarm_id"]
 
@@ -410,7 +410,7 @@ class AlarmFormScreen(Screen, FloatLayout):
 
         self.check_valid_input(alarm_dict)
         alarm_params = self.create_alarm_params_for_logic(alarm_dict)
-        main_screen = self.manager.screens[0]
+        main_screen = self.manager.screens[1]
 
         # performing create/edit alarm in the logic
         if to_edit != None:

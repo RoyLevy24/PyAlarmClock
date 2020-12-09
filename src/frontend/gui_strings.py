@@ -4,12 +4,37 @@
 
 screen_helper = """
 ScreenManager:
+    EnterScreen:
     MainScreen:
     AlarmFormScreen:
     AlarmActiveScreen:
     DismissSpeechScreen:
 
+<EnterScreen>:
+    name: 'enter'
+    MDBoxLayout:
+        orientation:'vertical'
+        MDToolbar:
+            title: "PyAlarmClock"
+            pos_hint: {"top": 1}
+            elevation: 11
 
+        Image:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            source: "frontend/assets/alarm_clock_logo.png"
+            size_hint_x: .6
+            size_hint_y: .6
+            allow_stretch: True
+
+        MDRoundFlatButton:
+            id: alarm_active_dismiss
+            text: "Go to Alarms"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            font_size: '40sp'
+            on_press: root.manager.current = 'main'
+
+        Label:
+            size_hint_y: .2
 
 <MainScreen>:
     name: 'main'
@@ -352,9 +377,9 @@ ThreeLineAvatarIconListItem:
 
     IconLeftWidget:
         icon: "pencil"
-        on_release: app.root.screens[0].edit_alarm(root.name)
+        on_release: app.root.screens[1].edit_alarm(root.name)
 
     IconRightWidget:
         icon: "delete"
-        on_release: app.root.screens[0].show_delete_alarm_dialog(root.name)
+        on_release: app.root.screens[1].show_delete_alarm_dialog(root.name)
 """
