@@ -1,10 +1,6 @@
-import sys
-
-sys.path.append("./src/")
-
-from playsound import playsound
-from backend.SpeechRecognition.RecognizeWords import *
 from backend.AlarmClock.Alarm import *
+from backend.SpeechRecognition.RecognizeWords import *
+from playsound import playsound
 
 
 class SpeechAlarm(Alarm):
@@ -34,7 +30,7 @@ class SpeechAlarm(Alarm):
         Transition the user to the speech recognition screen.
         """
         word_recognizer = RecognizeWords.getInstance()
-        # getting words details for the words the user needs to speak 
+        # getting words details for the words the user needs to speak
         word_list = word_recognizer.get_word_list(self.num_words)
         # loads details for first word
         self.load_word_screen(word_list)

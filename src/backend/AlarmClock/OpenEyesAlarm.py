@@ -1,8 +1,8 @@
-import sys
-sys.path.append("./src/")
-from backend.OpenEyesDetection.OpenEyesDetect import *
-from backend.AlarmClock.Alarm import *
 import datetime
+
+from backend.AlarmClock.Alarm import *
+from backend.OpenEyesDetection.OpenEyesDetect import *
+
 
 class OpenEyesAlarm(Alarm):
     """
@@ -23,7 +23,7 @@ class OpenEyesAlarm(Alarm):
             camera_num (int), default=0: camera device number the alarm uses to detect open eyes.
             ear (float), default=0.31: eye aspect ratio threshold to detect open eyes.
         """
-        
+
         Alarm.__init__(self, alarm_id, main_screen, time, days, description)
         self.staring_time = staring_time
         self.camera_num = camera_num
@@ -34,6 +34,7 @@ class OpenEyesAlarm(Alarm):
         Invokes open eyes detection algorithm for the staring time the user entered. 
         """
         open_eyes_detector = OpenEyesDetect.getInstance()
-        open_eyes_detector.detect_open_eyes(self.staring_time, self.camera_num, self.ear)
+        open_eyes_detector.detect_open_eyes(
+            self.staring_time, self.camera_num, self.ear)
         # navigating the user to the main screen
         super(OpenEyesAlarm, self).execute_alarm()

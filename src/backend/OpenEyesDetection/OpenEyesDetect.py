@@ -1,4 +1,3 @@
-#coding:utf8
 import sys
 import os
 
@@ -123,5 +122,3 @@ class OpenEyesDetect():
                 break
         cv2.destroyAllWindows()
         vs.stop()
-
-OpenEyesDetect.getInstance().detect_open_eyes(10,1,0.31)
