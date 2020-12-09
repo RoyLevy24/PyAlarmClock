@@ -12,3 +12,4 @@ cv2
 beautifulsoup4
 difflib
 urlib
+playsound

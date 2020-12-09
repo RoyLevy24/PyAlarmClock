@@ -161,6 +161,7 @@ class LogicManager():
         Checks if there are alarms that should ring soon.
         """
         while True:
+            time.sleep(1)
             curr_time = datetime.datetime.now().replace(second=0, microsecond=0)
             for alarm in self.alarm_list:
                 if self.alarm_should_ring(curr_time, alarm):
