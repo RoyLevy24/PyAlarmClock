@@ -1,7 +1,7 @@
-
+#coding:utf8
 import sys
-sys.path.append("backend/OpenEyesDetection/")
 import os
+
 import cv2
 import dlib
 import imutils
@@ -25,7 +25,10 @@ class OpenEyesDetect():
         if OpenEyesDetect.__instance != None:
             raise Exception("This class is a singleton!")
         else:
-            self.PREDICTOR_PATH = os.path.join(os.path.dirname(__file__),"face_landmarks_predictor.dat")
+            #TODO: use function from utils
+            pred_path = fr'{os.path.join(os.path.dirname(__file__),"face_landmarks_predictor.dat")}'
+            self.PREDICTOR_PATH = pred_path.encode(sys.getfilesystemencoding())
+            print(self.PREDICTOR_PATH)
             OpenEyesDetect.__instance = self  
 
     def get_frames_per_seconds(self, camera_num):
@@ -120,3 +123,5 @@ class OpenEyesDetect():
                 break
         cv2.destroyAllWindows()
         vs.stop()
+
+OpenEyesDetect.getInstance().detect_open_eyes(10,1,0.31)

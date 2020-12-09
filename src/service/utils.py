@@ -1,7 +1,7 @@
 # This module contains utility functions for use throughout the project
 
 import re
-
+import os
 
 def get_days_str(days_idx):
     """
@@ -22,3 +22,7 @@ def is_positive_int(s):
             return int(s) > 0
     except ValueError:
         return False
+
+
+def get_abs_path(rel_path):
+    return os.path.join(os.path.dirname(__file__), rel_path)
