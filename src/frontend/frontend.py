@@ -1,31 +1,24 @@
-import sys
-
-sys.path.append(".")
-sys.path.append("./src/")
-sys.path.append("./src/frontend/")
-sys.path.append("./src/frontend/screens")
-
-from frontend.screens.MainScreen import *
-from frontend.screens.DismissSpeechScreen import *
-from frontend.screens.AlarmFormScreen import *
-from frontend.screens.AlarmActiveScreen import *
-from frontend.gui_strings import alarm_string, screen_helper
-from kivymd.uix.picker import MDTimePicker
-from kivymd.app import MDApp
-from kivy.uix.screenmanager import Screen, ScreenManager
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ListProperty, ObjectProperty
-from kivy.lang.builder import Builder
-from kivy.core.window import Window
-from backend.Logic.LogicManager import *
 from datetime import datetime
 
+from backend.Logic.LogicManager import *
+from kivy.core.window import Window
+from kivy.lang.builder import Builder
+from kivy.properties import ListProperty, ObjectProperty
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.screenmanager import Screen, ScreenManager
+from kivymd.app import MDApp
+from kivymd.uix.picker import MDTimePicker
 
+from frontend.gui_strings import alarm_string, screen_helper
+from frontend.screens.AlarmActiveScreen import *
+from frontend.screens.AlarmFormScreen import *
+from frontend.screens.DismissSpeechScreen import *
+from frontend.screens.MainScreen import *
 
+# setting up default window size
 Window.size = (360, 740)
+
 # Create a screen manager
-
-
 sm = ScreenManager()
 sm.add_widget(MainScreen(name="main"))
 sm.add_widget(AlarmFormScreen(name="alarm_form"))
