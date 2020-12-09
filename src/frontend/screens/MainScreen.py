@@ -89,13 +89,13 @@ class MainScreen(Screen, FloatLayout):
         self.delete_dialog = MDDialog(
             title="Delete Alarm?",
             text="This alarm we no longer be active",
-            pos_hint={"center_x":.5, "center_y":.5},
+            pos_hint={"center_x": .5, "center_y": .5},
             size_hint_x=.8,
             buttons=[
                 MDFlatButton(
                     text="CANCEL",
                     on_press=self.close_delete_dialog(alarm_id, delete=False)
-                    
+
                 ),
                 MDRaisedButton(
                     text="DELETE",
@@ -121,7 +121,6 @@ class MainScreen(Screen, FloatLayout):
         self.ids.list.remove_widget(self.ids[alarm_id])
         self.logic_manager.delete_alarm(alarm_id)
 
-
     def load_alarm_active_details(self, alarm_dict):
         """
         Loads the details of an alarm that needs to be ringed
@@ -135,7 +134,16 @@ class MainScreen(Screen, FloatLayout):
         # setting up details
         alarm_active_screen.alarm_active_time.text = alarm_dict["time"]
         alarm_active_screen.alarm_active_desc.text = alarm_dict["description"]
-        alarm_active_screen.alarm_active_dismiss.on_press = alarm_dict["dismiss_func"]
+        alarm_active_screen.alarm_active_dismiss.on_press = self.stop_ringtone_dismiss_func(
+            alarm_active_screen, alarm_dict["dismiss_func"])
+
+        alarm_active_screen.play_alarm_ringtone()
         # transitioning to the screen
         self.manager.transition.direction = 'left'
         self.manager.current = 'alarm_active'
+
+    def stop_ringtone_dismiss_func(self, alarm_active_screen, dismiss_func):
+        def dismiss():
+            alarm_active_screen.stop_alarm_ringtone()
+            dismiss_func()
+        return dismiss
