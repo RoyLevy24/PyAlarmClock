@@ -1,6 +1,4 @@
 import math
-import os
-import sys
 import time
 
 import cv2
@@ -27,7 +25,7 @@ class OpenEyesDetect():
         if OpenEyesDetect.__instance == None:
             OpenEyesDetect()
         return OpenEyesDetect.__instance
-    
+
     def __init__(self):
         """
         Creates OpenEyesDetect instance if not already exists.
@@ -35,12 +33,11 @@ class OpenEyesDetect():
         if OpenEyesDetect.__instance != None:
             raise Exception("This class is a singleton!")
         else:
-            #TODO: use function from utils
-            pred_path = fr'{os.path.join(os.path.dirname(__file__),"face_landmarks_predictor.dat")}'
             # set up path for face landmarks predictor
-            self.PREDICTOR_PATH = pred_path.encode(sys.getfilesystemencoding())
+            pred_path = "backend/OpenEyesDetection/face_landmarks_predictor.dat"
+            self.PREDICTOR_PATH = pred_path
             print(self.PREDICTOR_PATH)
-            OpenEyesDetect.__instance = self  
+            OpenEyesDetect.__instance = self
 
     def get_frames_per_seconds(self, camera_num):
         """
@@ -54,15 +51,15 @@ class OpenEyesDetect():
         num_frames = 60
 
         start = time.time()
-        for i in range(0, num_frames) :
+        for i in range(0, num_frames):
             ret, frame = video.read()
         end = time.time()
-        
+
         # Time elapsed
         seconds = end - start
         # Calculate frames per second
-        fps  = num_frames / seconds
-        
+        fps = num_frames / seconds
+
         video.release()
 
         return math.floor(fps)
@@ -84,7 +81,6 @@ class OpenEyesDetect():
         ear = (v_left + v_right) / (2.0 * h)
         return ear
 
-
     def detect_open_eyes(self, staring_time, camera_num, ear_threshold):
         """
         Detecting that the user has opened his eyes for certain amount of time.
@@ -93,7 +89,7 @@ class OpenEyesDetect():
             staring_time (int): time in seconds the user needs to keep his eyes open.
             camera_num (int): device number of the camera the method uses.
             ear_threshold (float): eye aspect ratio threshold for detecting an eye is opened.
-        
+
         """
         # setting up amount of frames the user has opened his eyes
         open_eyes_frames_num = 0
@@ -110,10 +106,10 @@ class OpenEyesDetect():
 
         # calculate frames per seconds based on the camera
         fps = self.get_frames_per_seconds(camera_num)
-        
-        # estimating amount of frames needed 
+
+        # estimating amount of frames needed
         consec_frames_threshold = math.floor(staring_time * fps * 0.6)
-        
+
         # staring the camera
         vs = VideoStream(camera_num).start()
         while open_eyes_frames_num <= consec_frames_threshold:
@@ -148,7 +144,7 @@ class OpenEyesDetect():
                 cv2.drawContours(frame, [left_eye_hull], -1, (0, 255, 0), 1)
                 cv2.drawContours(frame, [right_eye_hull], -1, (0, 255, 0), 1)
 
-                # increment the frames the user opened his eyes if the 
+                # increment the frames the user opened his eyes if the
                 # computed ear >= ear_threshold
                 if (ear >= ear_threshold):
                     if (open_eyes_frames_num <= consec_frames_threshold):
