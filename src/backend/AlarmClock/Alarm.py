@@ -5,7 +5,7 @@ class Alarm():
 
     def __init__(self, alarm_id, main_screen, time, days, description):
         """
-        Creates a new Alarm
+        Creates a new Alarm.
 
         Args:
             alarm_id (String): unique identifier for the alarm.
