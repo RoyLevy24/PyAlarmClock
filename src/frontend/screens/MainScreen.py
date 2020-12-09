@@ -1,21 +1,15 @@
-import sys
-
-sys.path.append("./src/")
-sys.path.append("./src/frontend/")
-sys.path.append(".")
-
-from kivymd.uix.picker import MDTimePicker
-from kivymd.app import MDApp
-from kivy.uix.screenmanager import Screen, ScreenManager
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ListProperty, ObjectProperty
-from kivy.lang.builder import Builder
-from kivy.core.window import Window
-from frontend.gui_strings import screen_helper
 from datetime import datetime
-from kivymd.uix.button import MDRaisedButton,MDFlatButton
-from kivymd.uix.dialog import MDDialog
 
+from frontend.gui_strings import screen_helper
+from kivy.core.window import Window
+from kivy.lang.builder import Builder
+from kivy.properties import ListProperty, ObjectProperty
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.screenmanager import Screen, ScreenManager
+from kivymd.app import MDApp
+from kivymd.uix.button import MDFlatButton, MDRaisedButton
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.picker import MDTimePicker
 
 
 class MainScreen(Screen, FloatLayout):
@@ -87,6 +81,12 @@ class MainScreen(Screen, FloatLayout):
         return close
 
     def show_delete_alarm_dialog(self, alarm_id):
+        """
+        Shows a dialog that making sure that the user want to delete an alarm
+
+        Args:
+            alarm_id (String): the id of the alarm the user may or may not want to delete.
+        """
         self.delete_dialog = MDDialog(
             title="Delete Alarm?",
             text="This alarm we no longer be active",
@@ -124,29 +124,19 @@ class MainScreen(Screen, FloatLayout):
 
 
     def load_alarm_active_details(self, alarm_dict):
-        alarm_active_screen = self.manager.screens[2]
+        """
+        Loads the details of an alarm that needs to be ringed
+        into the alarm active scree.
 
+        Args:
+            alarm_dict (dict): a dictionary containing the alarm's details.
+        """
+        # getting the screen
+        alarm_active_screen = self.manager.screens[2]
+        # setting up details
         alarm_active_screen.alarm_active_time.text = alarm_dict["time"]
         alarm_active_screen.alarm_active_desc.text = alarm_dict["description"]
         alarm_active_screen.alarm_active_dismiss.on_press = alarm_dict["dismiss_func"]
-
+        # transitioning to the screen
         self.manager.transition.direction = 'left'
         self.manager.current = 'alarm_active'
-
-
-
-# import multiprocessing
-# from playsound import playsound
-
-# p = multiprocessing.Process(target=playsound, args=("file.mp3",))
-# p.start()
-# input("press ENTER to stop playback")
-# p.terminate()
-
-        # alarm_ringtone_proc = multiprocessing.Process(target=playsound, daemon=True,  args=("./src/frontend/assets/alarm_clock_ringtone.mp3",))
-
-        # def dismiss_alarm(alarm_ringtone_proc, dismiss_func):
-        #     def dismiss():
-        #         alarm_ringtone_proc.terminate()
-        #         dismiss_func()
-        #     return dismiss
