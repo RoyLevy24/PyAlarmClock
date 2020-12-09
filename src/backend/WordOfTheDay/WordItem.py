@@ -1,6 +1,22 @@
 class WordItem():
+    """
+    This class represants a words that the user needs to speak
+    for speech recognition alarm.
+    """
 
     def __init__(self, title, pronounce, pronounce_audio, pos, meaning):
+        """
+        Creates a new WordItem.
+
+        Args:
+            title (String): the word itself represanted as a string.txt
+            pronounce (String): a string that tells how to pronounce the word.
+            pronounce_audio (String): path to audio file containing pronunciation of the word.
+            # TODO: show pos in the screen, totally forgat aboute this!!!!
+            pos (String): part of speech of the word
+            meaning (String): the words meaning.
+        """
+
         self.title = title
         self.pronounce = pronounce
         self.pronounce_audio = pronounce_audio
