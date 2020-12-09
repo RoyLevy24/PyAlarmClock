@@ -12,7 +12,6 @@ class WordItem():
             title (String): the word itself represanted as a string.txt
             pronounce (String): a string that tells how to pronounce the word.
             pronounce_audio (String): path to audio file containing pronunciation of the word.
-            # TODO: show pos in the screen, totally forgat aboute this!!!!
             pos (String): part of speech of the word
             meaning (String): the words meaning.
         """

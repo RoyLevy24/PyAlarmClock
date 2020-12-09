@@ -7,8 +7,6 @@ from backend.AlarmClock.Alarm import *
 from backend.AlarmClock.OpenEyesAlarm import *
 from backend.AlarmClock.SpeechAlarm import *
 
-# TODO: clean sys.path, move all to start of the program
-
 
 class LogicManager():
     """

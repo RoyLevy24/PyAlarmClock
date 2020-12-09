@@ -23,7 +23,6 @@ class MainScreen(Screen, FloatLayout):
 
     def set_logic_manager(self, logic_manager):
         self.logic_manager = logic_manager
-        # TODO: add set_main_screen to LogicManager
         self.logic_manager.set_main_screen(self)
 
     def find_alarm_by_id(self, alarm_list, alarm_id):
