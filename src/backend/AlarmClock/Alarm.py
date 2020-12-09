@@ -33,4 +33,3 @@ class Alarm():
         dismisses regular alarm.
         """
         self.back_to_main_screen()
-
