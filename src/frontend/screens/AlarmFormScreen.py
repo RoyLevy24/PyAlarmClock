@@ -27,7 +27,7 @@ class AlarmFormScreen(Screen, FloatLayout):
     def __init__(self, **kwargs):
         super(AlarmFormScreen, self).__init__(**kwargs)
         self.alarm_to_edit = None
-        self.MAX_DESC_SIZE = 50
+        self.MAX_DESC_SIZE = 25
         self.MAX_NUM_WORDS = 10
         self.MAX_STARE_TIME = 300
 

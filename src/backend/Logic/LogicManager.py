@@ -67,7 +67,7 @@ class LogicManager():
                                   description, staring_time, camera_num=self.args.camera_num, ear=self.args.ear)
         elif num_words:
             alarm = SpeechAlarm(alarm_id, self.main_screen,
-                                time, days, description, num_words)
+                                time, days, description, num_words, mic_num=self.args.microphone_num, sim_thresh=self.args.sim_thresh)
 
         else:
             alarm = Alarm(alarm_id, self.main_screen, time, days, description)

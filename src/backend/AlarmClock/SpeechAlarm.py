@@ -8,8 +8,7 @@ class SpeechAlarm(Alarm):
     This class represents speech recognition alarm
     """
 
-    def __init__(self, alarm_id, main_screen, time, days, description, num_words):
-        # TODO: gets args from the command line
+    def __init__(self, alarm_id, main_screen, time, days, description, num_words, mic_num=0, sim_thresh=0.65):
         """
         Creates a new SpeechAlarm.
 
@@ -20,9 +19,13 @@ class SpeechAlarm(Alarm):
             days (list(int)): days indexes for the days the alarm should ring.
             description (String): description of the alarm.
             num_words (int): number of words the user to pronounce in order to dismiss the alarm.
+            mic_num (int): device number of the microphone used for the speech recognition.
+            sim_thresh (float): measure to determine the minimum ratio two words considered similar.
         """
         Alarm.__init__(self, alarm_id, main_screen, time, days, description)
         self.num_words = num_words
+        self.mic_num = mic_num
+        self.sim_thresh = sim_thresh
 
     def execute_alarm(self):
         """
@@ -60,9 +63,10 @@ class SpeechAlarm(Alarm):
         def pronounce_on_press(): return playsound(current_word.pronounce_audio)
 
         # setting up details in the screen
-        dismiss_speech_screen.dismiss_speech_title.text = "Dismiss Speech"
+        dismiss_speech_screen.dismiss_speech_title.title = f"Dismiss Speech - {current_word.title}"
         dismiss_speech_screen.dismiss_speech_word.text = current_word.title
         dismiss_speech_screen.dismiss_speech_pronounce.text = current_word.pronounce
+        dismiss_speech_screen.dismiss_speech_pos.text = current_word.pos
         dismiss_speech_screen.dismiss_speech_play_word.on_press = pronounce_on_press
         dismiss_speech_screen.dismiss_speech_word_desc.text = current_word.meaning
         dismiss_speech_screen.dismiss_speech_record.on_press = mic_on_press
@@ -87,7 +91,7 @@ class SpeechAlarm(Alarm):
             dismiss_speech_screen.disable_speech_button()
             # TODO: alert the user to start speaking
             # user starts to speak
-            is_recognized_word = RecognizeWords.getInstance().recognize_word(word_title)
+            is_recognized_word = RecognizeWords.getInstance().recognize_word(word_title, self.mic_num, self.sim_thresh)
             dismiss_speech_screen.enable_speech_button()
             if is_recognized_word:
                 # moves the user to the next screen

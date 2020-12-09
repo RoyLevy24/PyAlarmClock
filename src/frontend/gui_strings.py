@@ -256,7 +256,6 @@ ScreenManager:
 
         MDLabel:
             id: alarm_active_desc
-            # text: "Test on Friday!"
             halign: "center"
             valign: "center"
             markup: True
@@ -265,12 +264,12 @@ ScreenManager:
 
         Label:
 
-        MDFillRoundFlatIconButton:
+        MDFillRoundFlatButton:
             id: alarm_active_dismiss
-            icon: "cancel"
             text: "dismiss"
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            font_size: '30sp'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+            font_size: '40sp'
+            size_hint_y: 0.9
 
 <DismissSpeechScreen>
     name: 'dismiss_speech'
@@ -279,12 +278,12 @@ ScreenManager:
     dismiss_speech_word: dismiss_speech_word
     dismiss_speech_pronounce: dismiss_speech_pronounce
     dismiss_speech_play_word: dismiss_speech_play_word
+    dismiss_speech_pos: dismiss_speech_pos
     dismiss_speech_word_desc: dismiss_speech_word_desc
     dismiss_speech_record: dismiss_speech_record
     dismiss_speech_bottom: dismiss_speech_bottom
     MDToolbar:
         id: dismiss_speech_title
-        # title: "Dismiss Speech - 1/5"
         pos_hint: {"top": 1}
         elevation: 11
         
@@ -297,7 +296,6 @@ ScreenManager:
         
         MDLabel:
             id: dismiss_speech_word
-            # text: "Word"
             halign: "center"
             valign: "center"
             markup: True
@@ -309,7 +307,6 @@ ScreenManager:
 
             MDLabel:
                 id: dismiss_speech_pronounce
-                # text: "[wo-rd]"
                 halign: "center"
                 valign: "center"
                 markup: True
@@ -319,14 +316,17 @@ ScreenManager:
                 id: dismiss_speech_play_word
                 icon: "play-circle"
                 size_hint_y: .3
+                size_hint_x: .6
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         
         MDLabel:
+            id: dismiss_speech_pos
+            markup: True
+            font_style: "H6"
+            font_name: "Roboto-Italic"
+
+        MDLabel:
             id: dismiss_speech_word_desc
-            # halign: "center"
-            # valign: "center"
-            # markup: True
-            # font_style: "H6"
             multiline: True
 
         MDFloatingActionButton:
