@@ -1,7 +1,5 @@
-import argparse
 import os
 import sys
-
 # tells the os to ignore Kivy's argument parser
 os.environ["KIVY_NO_ARGS"] = "1"
 
@@ -11,7 +9,9 @@ sys.path.append("./src/frontend/")
 sys.path.append("./src/backend/")
 sys.path.append("./src/service/")
 
+from service.utils import *
 from frontend.frontend import *
+import argparse
 
 
 class PyAlarmClock():
@@ -46,7 +46,19 @@ def get_command_line_args():
     return args
 
 
+def check_args(args):
+    if args.camera_num < 0 :
+        raise Exception("camera_num must be greater than 0!")
+    if check_ratio(args.ear, 0, 1) == False:
+        raise Exception("eye aspect ratio must be between 0 - 1")
+    if args.microphone_num < 0:
+        raise Exception("microphone_num must be greater than 0!")
+    if check_ratio(args.sim_thresh, 0, 1) == False:
+        raise Exception("similarity threshold must be between 0 - 1")
+
+
 if __name__ == '__main__':
     args = get_command_line_args()
+    check_args(args)
     app = PyAlarmClock(args)
     app.run()

@@ -30,3 +30,9 @@ def get_abs_path(rel_path):
     Retruns an absolute path from a relative path.
     """
     return os.path.join(os.path.dirname(__file__), rel_path)
+
+def check_ratio(num, lower, upper):
+    try:
+        return lower<=num<=upper
+    except Exception:
+        return False

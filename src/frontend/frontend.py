@@ -39,7 +39,7 @@ class AlarmApp(MDApp):
         self.args = args
 
     def build(self):
-        self.icon = "frontend/assets/alarm_clock_icon.png"
+        self.icon = "./assets/alarm_clock_icon.png"
         self.title = "PyAlarmClock"
         # sets color theme
         self.theme_cls.primary_palette = 'Purple'

@@ -19,6 +19,7 @@ class WordOfTheDay():
         self.BASE_URL = "https://www.dictionary.com/e/word-of-the-day/"
         # words per page in the website
         self.WORDS_PER_PAGE = 7
+        self.START_PAGE_RANDOM_RANGE = 15
         self.num_words = num_words
 
     def get_soup(self, url):
@@ -36,6 +37,17 @@ class WordOfTheDay():
             return BeautifulSoup(html.read(), "html.parser", from_encoding="utf-8")
         except AttributeError as e:
             return None
+
+    def get_random_page(self):
+        page_num = random.randrange(1, self.START_PAGE_RANDOM_RANGE)
+        print(page_num)
+        soup = self.get_soup(self.BASE_URL)
+        
+        for _ in range(page_num):
+            next_page = soup.find("a", class_="otd-item__load-more")["href"]
+            soup = self.get_soup(next_page)
+
+        return soup
 
     def get_word_title(self, word_item_head):
         """
@@ -97,7 +109,7 @@ class WordOfTheDay():
         """
         Returns a list of word item in length @self.num_words
         """
-        soup = self.get_soup(self.BASE_URL)
+        soup = self.get_random_page()
         # getting the first page words
         words_list = self.create_words_list(soup)
         remaining_words = self.num_words - self.WORDS_PER_PAGE
