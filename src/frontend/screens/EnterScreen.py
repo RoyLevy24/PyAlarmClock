@@ -8,3 +8,11 @@ class EnterScreen(Screen, FloatLayout):
 
     def __init__(self, **kwargs):
         super(EnterScreen, self).__init__(**kwargs)
+
+    def navigate_to_alarms(self):
+        self.manager.transition.direction = 'left'
+        self.manager.current = 'main'
+    
+    def navigate_to_todos(self):
+        self.manager.transition.direction = 'left'
+        self.manager.current = 'todo'

@@ -21,6 +21,10 @@ class MainScreen(Screen, FloatLayout):
         super(MainScreen, self).__init__(**kwargs)
         self.alarm_list = []
 
+    def go_back_to_enter(self):
+        self.manager.transition.direction = 'right'
+        self.manager.current = 'enter'
+
     def set_logic_manager(self, logic_manager):
         self.logic_manager = logic_manager
         self.logic_manager.set_main_screen(self)

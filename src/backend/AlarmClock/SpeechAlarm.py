@@ -98,7 +98,7 @@ class SpeechAlarm(Alarm):
                 return next_button_on_press()
             else:
                 # shows an error message if the user hasn't spoke the word correctly
-                dismiss_speech_screen.show_speech_fail_snackbar()
+                # dismiss_speech_screen.show_speech_fail_snackbar()
                 return lambda: None
 
         return mic_on_press

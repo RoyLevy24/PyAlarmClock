@@ -95,7 +95,6 @@ class OpenEyesDetect():
         open_eyes_frames_num = 0
 
         # getting detector and predictor objects from dlib
-        # TODO: add a try catch here
         detector = dlib.get_frontal_face_detector()
         predictor = dlib.shape_predictor(self.PREDICTOR_PATH)
 

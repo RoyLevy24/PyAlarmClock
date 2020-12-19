@@ -60,12 +60,10 @@ class RecognizeWords():
             audio = self.recognizer.listen(source)
             try:
                 # getting the word from the user
-                # TODO: notify the user he can speak
                 said_word = self.recognizer.recognize_google(audio)
                 print(said_word)
                 return self.are_similar_words(actual_word, said_word, sim_thresh)
             except Exception as e:
-                # TODO: change exception message
                 print(str(e))
 
     def get_word_list(self, num_words):

@@ -15,6 +15,8 @@ from frontend.screens.AlarmFormScreen import *
 from frontend.screens.DismissSpeechScreen import *
 from frontend.screens.MainScreen import *
 from frontend.screens.EnterScreen import *
+from frontend.screens.TODOScreen.TODOScreen import *
+from frontend.screens.TODOScreen.TODOFormScreen import *
 
 # setting up default window size
 Window.size = (360, 740)
@@ -26,6 +28,8 @@ sm.add_widget(MainScreen(name="main"))
 sm.add_widget(AlarmFormScreen(name="alarm_form"))
 sm.add_widget(AlarmActiveScreen(name="alarm_active"))
 sm.add_widget(DismissSpeechScreen(name="dismiss_speech"))
+sm.add_widget(TODOScreen(name="todo"))
+sm.add_widget(TODOFormScreen(name="todo_form"))
 
 
 class AlarmApp(MDApp):
