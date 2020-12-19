@@ -17,13 +17,13 @@ class AlarmActiveScreen(Screen, FloatLayout):
         """
         Starting playing ringtone in the background.
         """
-        # mixer.init()
-        # mixer.music.load("frontend/assets/alarm_clock_ringtone.mp3")
-        # mixer.music.play()
+        mixer.init()
+        mixer.music.load("frontend/assets/alarm_clock_ringtone.mp3")
+        mixer.music.play()
 
     def stop_alarm_ringtone(self):
         """
         Stop playing ringtone in the background.
         """
-        # mixer.stop()
-        # mixer.quit()
+        mixer.stop()
+        mixer.quit()
