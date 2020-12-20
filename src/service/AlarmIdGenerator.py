@@ -28,7 +28,7 @@ class AlarmIdGenerator():
 
     def create_id_generator(self):
         """
-        Creates a generator for alarm clocks ids. 
+        Creates a generator for alarm clocks ids.
         """
         i = 0
         while True:

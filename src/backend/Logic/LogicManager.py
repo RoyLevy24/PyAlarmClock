@@ -82,7 +82,7 @@ class LogicManager():
             days (list(int)): days indexes for the days the alarm should ring.
             description (String): description of the alarm.
             staring_time (int): time in seconds the user needs to open his eyes for the alarm to dismiss.
-            num_words (int): number of words the user to pronounce in order to dismiss the alarm.     
+            num_words (int): number of words the user to pronounce in order to dismiss the alarm.  
         """
         alarm = self.create_alarm(
             alarm_id, time, days, description, staring_time, num_words)
@@ -108,7 +108,7 @@ class LogicManager():
             days (list(int)): days indexes for the days the alarm should ring.
             description (String): description of the alarm.
             staring_time (int): time in seconds the user needs to open his eyes for the alarm to dismiss.
-            num_words (int): number of words the user to pronounce in order to dismiss the alarm.     
+            num_words (int): number of words the user to pronounce in order to dismiss the alarm.
         """
         alarm_idx = self.get_alarm_index_by_id(alarm_id)
         if alarm_idx != -1:

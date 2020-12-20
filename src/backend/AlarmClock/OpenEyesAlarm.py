@@ -1,5 +1,3 @@
-import datetime
-
 from backend.AlarmClock.Alarm import *
 from backend.OpenEyesDetection.OpenEyesDetect import *
 
@@ -31,7 +29,7 @@ class OpenEyesAlarm(Alarm):
 
     def execute_alarm(self):
         """
-        Invokes open eyes detection algorithm for the staring time the user entered. 
+        Invokes open eyes detection algorithm for the staring time the user entered.
         """
         open_eyes_detector = OpenEyesDetect.getInstance()
         open_eyes_detector.detect_open_eyes(

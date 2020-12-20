@@ -1,15 +1,9 @@
 from datetime import datetime
 
-from frontend.gui_strings import screen_helper
-from kivy.core.window import Window
-from kivy.lang.builder import Builder
-from kivy.properties import ListProperty, ObjectProperty
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import Screen, ScreenManager
-from kivymd.app import MDApp
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.picker import MDTimePicker
 
 
 class MainScreen(Screen, FloatLayout):

@@ -1,21 +1,18 @@
-import weakref
 from datetime import datetime
 
 from frontend.gui_strings import todo_string
-from kivy.core.window import Window
 from kivy.lang.builder import Builder
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import Screen
-from kivymd.app import MDApp
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.list import ILeftBodyTouch, TwoLineAvatarIconListItem
 from kivymd.uix.picker import MDDatePicker
 from kivymd.uix.selectioncontrol import MDCheckbox
-from kivymd.uix.list import ILeftBodyTouch, TwoLineAvatarIconListItem
 from service.TODOIdGenerator import *
-from service.utils import *
 
-class TODOFormScreen(Screen , FloatLayout):
+
+class TODOFormScreen(Screen, FloatLayout):
     """
     This class responsibility is to give the user option to add a todo task.
     """
@@ -27,9 +24,13 @@ class TODOFormScreen(Screen , FloatLayout):
         self.add_dialog = None
 
     def reset_todo_form(self):
+        """
+        Loads the current date to the todo form and sets the description to empty string.
+        """
         self.load_curr_date()
         self.todo_desc.text = ""
 #---------------------------------------toolbar actions-------------------------------------------#
+
     def back_to_todo_list(self):
         """
         Transition into the TODOScreen
@@ -62,12 +63,12 @@ class TODOFormScreen(Screen , FloatLayout):
         """
         if not self.add_dialog:
             self.add_dialog = MDDialog(
-            text="TODO Added!",
-            pos_hint={"center_x": .5, "center_y": .5},
-            size_hint_x=.8,
-            buttons=[MDRaisedButton(
-                text="DISCARD", on_press=self.add_dialog_close)]
-        )
+                text="TODO Added!",
+                pos_hint={"center_x": .5, "center_y": .5},
+                size_hint_x=.8,
+                buttons=[MDRaisedButton(
+                    text="DISCARD", on_press=self.add_dialog_close)]
+            )
         self.add_dialog.open()
 
     def error_dialog_close(self, *args):
@@ -95,7 +96,7 @@ class TODOFormScreen(Screen , FloatLayout):
 #-------------------------------------------------------------------------------------------------#
 
 #-----------------------------------input validation actions--------------------------------------#
-    def check_valid_description(self,description):
+    def check_valid_description(self, description):
         """
         Checks if the todo description entered by the user is valid
 
@@ -103,7 +104,8 @@ class TODOFormScreen(Screen , FloatLayout):
             Exception: If the description entered by the user is exceeding the max_desc_size or is empty.
         """
         if description == "" or len(description) > self.MAX_DESC_SIZE:
-            raise Exception(f'Description Length Must be Between 1 to {self.MAX_DESC_SIZE}')
+            raise Exception(
+                f'Description Length Must be Between 1 to {self.MAX_DESC_SIZE}')
 
     def check_valid_input(self, todo_dict):
         """
@@ -111,7 +113,7 @@ class TODOFormScreen(Screen , FloatLayout):
 
         Args:
             todo_dict (dict): A dictionary contaning todo details.
-        
+
         Raises:
             Exception: If the todo details in @todo_dict are not valid.
         """
@@ -122,16 +124,26 @@ class TODOFormScreen(Screen , FloatLayout):
 #-----------------------------------------input actions-------------------------------------------#
 
     def load_curr_date(self):
+        """
+        Load the current date to the todo form.
+        """
         curr_date = datetime.now().date()
         curr_date_str = curr_date.strftime("%Y:%m:%d")
         self.date_picker.text = curr_date_str
 
     def set_date_text(self, date):
+        """
+        Sets a String of a date in the todo form date picker.
+        """
         self.date_picker.text = date.strftime("%Y:%m:%d")
 
     def open_date_picker(self):
+        """
+        Opens up a date picker so the user can choose a date for adding a todo task.
+        """
         min_date = datetime.now().date()
-        picker_date = datetime.strptime(self.date_picker.text, '%Y:%m:%d').date()
+        picker_date = datetime.strptime(
+            self.date_picker.text, '%Y:%m:%d').date()
 
         date_dialog = MDDatePicker(
             callback=self.set_date_text,
@@ -165,7 +177,6 @@ class TODOFormScreen(Screen , FloatLayout):
         todo_screen = self.manager.screens[5]
         todo_screen.add_todo(todo_id, todo_date, todo_desc, todo_item)
 
-
     def get_todo_details(self):
         """
         Gets a todo details from the user and adds it to the todos list.
@@ -189,9 +200,12 @@ class TODOFormScreen(Screen , FloatLayout):
 
 #-------------------------------------------------------------------------------------------------#
 
+#-------------------------------classes for todo item in the screen-------------------------------#
 
 class TODOListItemText(TwoLineAvatarIconListItem):
     pass
 
+
 class LeftCheckbox(ILeftBodyTouch, MDCheckbox):
     pass
+#-------------------------------------------------------------------------------------------------#

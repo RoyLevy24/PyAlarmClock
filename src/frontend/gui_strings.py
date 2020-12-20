@@ -1,5 +1,5 @@
-# This file contains Strings written in KV language
-# The Strings will be used for creating elements such as the Screens of the application.
+"""This file contains Strings written in KV language
+The Strings will be used for creating elements such as the Screens of the application."""
 
 
 screen_helper = """

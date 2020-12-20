@@ -42,7 +42,7 @@ class WordOfTheDay():
         page_num = random.randrange(1, self.START_PAGE_RANDOM_RANGE)
         print(page_num)
         soup = self.get_soup(self.BASE_URL)
-        
+                    
         for _ in range(page_num):
             next_page = soup.find("a", class_="otd-item__load-more")["href"]
             soup = self.get_soup(next_page)

@@ -36,7 +36,7 @@ class Alarm():
         today_todo_screen = self.main_screen.manager.screens[5]
         self.main_screen.manager.transition.direction = 'left'
 
-        if(today_todo_screen.load_today_tasks_screen()):
+        if today_todo_screen.load_today_tasks_screen():
             self.main_screen.manager.current = "todo"
         else:
             self.main_screen.manager.current = "main"

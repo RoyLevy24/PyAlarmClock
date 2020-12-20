@@ -40,7 +40,7 @@ class RecognizeWords():
             said_word (String): the word said by the user.
             sim_thresh (float): measurement to determine the minimum similarity for the words.
 
-        Returns: 
+        Returns:
             True if the words are similar enough (determined by @sim_thresh).
             False, otherwise.
         """
