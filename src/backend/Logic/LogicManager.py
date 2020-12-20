@@ -166,7 +166,6 @@ class LogicManager():
             for alarm in self.alarm_list:
                 if self.alarm_should_ring(curr_time, alarm):
                     self.alarms_queue.put(alarm)
-                    time.sleep(60)
 
     def execute_alarm(self):
         """
@@ -174,10 +173,13 @@ class LogicManager():
         Transition the user to dismiss screen, and sets up details for alarm execution.
         """
         while True:
-            alarm = self.alarms_queue.get()
-            alarm_details_dict = {
-                "time": alarm.time.strftime("%H:%M"),
-                "description": alarm.description,
-                "dismiss_func": alarm.execute_alarm,
-            }
-            self.main_screen.load_alarm_active_details(alarm_details_dict)
+            # busy wating if alarm is currently executing
+            if hasattr(self, 'main_screen') and self.main_screen.is_alarm_active == False:
+                alarm = self.alarms_queue.get()
+                alarm_details_dict = {
+                    "time": alarm.time.strftime("%H:%M"),
+                    "description": alarm.description,
+                    "dismiss_func": alarm.execute_alarm,
+                }
+                self.main_screen.load_alarm_active_details(alarm_details_dict)
+                self.main_screen.is_alarm_active = True

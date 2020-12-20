@@ -34,14 +34,13 @@ class Alarm():
         If there are not tasks, navigates to the main screen.
         """
         today_todo_screen = self.main_screen.manager.screens[5]
-        today_todo_screen.load_today_tasks_screen()
         self.main_screen.manager.transition.direction = 'left'
-        self.main_screen.manager.current = "todo"
 
-        # if (today_todo_screen.load_today_todo()):
-        #     self.main_screen.manager.current = "today_todo"
-        # else:
-        #     self.main_screen.manager.current = "main"
+        if(today_todo_screen.load_today_tasks_screen()):
+            self.main_screen.manager.current = "todo"
+        else:
+            self.main_screen.manager.current = "main"
+            self.main_screen.is_alarm_active = False
 
 
     def execute_alarm(self):

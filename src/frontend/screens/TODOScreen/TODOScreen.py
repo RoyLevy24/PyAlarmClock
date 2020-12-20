@@ -43,6 +43,7 @@ class TODOScreen(Screen, FloatLayout):
         self.manager.transition.direction = 'left'
         self.manager.current = 'main'
         self.reset_screen()
+        self.manager.screens[1].is_alarm_active = False
 
     def reset_screen(self):
         toolbar = self.ids.todo_toolbar
@@ -58,6 +59,10 @@ class TODOScreen(Screen, FloatLayout):
         self.list_item_size = None
 
     def load_today_tasks_screen(self):
+
+        if self.has_tasks_today() == False:
+            return False
+
         if self.init_attrs == False:
             self.init_today_tasks_attributes()
 
@@ -68,11 +73,20 @@ class TODOScreen(Screen, FloatLayout):
 
         curr_date_str = datetime.now().date().strftime("%Y:%m:%d")
         for key, value in self.ids.items():
-            if key.startswith("todo_id_") and value.secondary_text != curr_date_str:
+            if key.startswith("todo_id_"):
                 if not self.list_item_size:
                     self.list_item_size = (value.size[0], value.size[1])
-                value.size = (0,0)
-                value.opacity = 0
+                if value.secondary_text != curr_date_str:
+                    value.size = (0,0)
+                    value.opacity = 0
+
+        return True
+
+    def has_tasks_today(self):
+        for key in self.ids:
+            if key.startswith("todo_id_"):
+                return True
+        return False
 
     def go_back_to_enter(self):
         self.manager.transition.direction = 'right'
@@ -111,8 +125,4 @@ class TODOScreen(Screen, FloatLayout):
         )
         # removes the todo from the screen's view
         self.ids.list.remove_widget(self.ids[todo_id])
-    
-    def get_todo_by_id(self, todo_id):
-        for todo in self.todo_list:
-            if todo.id == todo_id:
-                return todo
+        self.ids.pop(todo_id, None)

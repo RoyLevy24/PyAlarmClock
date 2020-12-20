@@ -20,6 +20,7 @@ class MainScreen(Screen, FloatLayout):
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
         self.alarm_list = []
+        self.is_alarm_active = False
 
     def go_back_to_enter(self):
         self.manager.transition.direction = 'right'
