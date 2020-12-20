@@ -36,7 +36,6 @@ class OpenEyesDetect():
             # set up path for face landmarks predictor
             pred_path = "backend/OpenEyesDetection/face_landmarks_predictor.dat"
             self.PREDICTOR_PATH = pred_path
-            print(self.PREDICTOR_PATH)
             OpenEyesDetect.__instance = self
 
     def get_frames_per_seconds(self, camera_num):

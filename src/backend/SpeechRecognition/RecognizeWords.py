@@ -57,14 +57,14 @@ class RecognizeWords():
         with sr.Microphone(device_index=mic_num) as source:
             # setting up microphone for speech
             self.recognizer.adjust_for_ambient_noise(source)
-            audio = self.recognizer.listen(source)
             try:
+                audio = self.recognizer.listen(source)
                 # getting the word from the user
                 said_word = self.recognizer.recognize_google(audio)
                 print(said_word)
                 return self.are_similar_words(actual_word, said_word, sim_thresh)
             except Exception as e:
-                print(str(e))
+                return False
 
     def get_word_list(self, num_words):
         """

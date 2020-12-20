@@ -87,7 +87,7 @@ class MainScreen(Screen, FloatLayout):
         """
         self.delete_dialog = MDDialog(
             title="Delete Alarm?",
-            text="This alarm we no longer be active",
+            text="This alarm will no longer be active",
             pos_hint={"center_x": .5, "center_y": .5},
             size_hint_x=.8,
             buttons=[

@@ -67,7 +67,7 @@ class TODOFormScreen(Screen, FloatLayout):
                 pos_hint={"center_x": .5, "center_y": .5},
                 size_hint_x=.8,
                 buttons=[MDRaisedButton(
-                    text="DISCARD", on_press=self.add_dialog_close)]
+                    text="OK", on_press=self.add_dialog_close)]
             )
         self.add_dialog.open()
 
