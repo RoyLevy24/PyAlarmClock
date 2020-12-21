@@ -8,6 +8,7 @@ from kivymd.uix.picker import MDTimePicker
 from frontend.gui_strings import alarm_string
 from service.utils import *
 import weakref
+from kivy.lang.builder import Builder
 
 
 class MainScreen(Screen, FloatLayout):
