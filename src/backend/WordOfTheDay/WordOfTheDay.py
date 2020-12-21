@@ -31,12 +31,12 @@ class WordOfTheDay():
         """
         try:
             html = urlopen(url)
-        except HTTPError as e:
-            return None
+        except Exception as e:
+            raise Exception("No Internet Connection")
         try:
             return BeautifulSoup(html.read(), "html.parser", from_encoding="utf-8")
         except AttributeError as e:
-            return None
+            raise Exception("Cannot Read Web Page!")
 
     def get_random_start_page(self):
         page_num = random.randrange(1, self.START_PAGE_RANDOM_RANGE)

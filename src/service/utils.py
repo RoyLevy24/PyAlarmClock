@@ -2,6 +2,8 @@
 
 import os
 import re
+import speech_recognition as sr
+import cv2
 
 
 def get_days_str(days_idx):
@@ -36,4 +38,17 @@ def check_ratio(num, lower, upper):
         return lower<=num<=upper
     except Exception:
         return False
-        
+
+def get_num_camera_devices():
+    index = 0
+    while True:
+        cap = cv2.VideoCapture(index)
+        if not cap.read()[0]:
+            break
+        else:
+            index += 1
+        cap.release()
+    return index
+
+def get_num_microphone_devices():
+    return len(sr.Microphone.list_microphone_names())

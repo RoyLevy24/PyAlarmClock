@@ -47,12 +47,16 @@ def get_command_line_args():
 
 
 def check_args(args):
-    if args.camera_num < 0 :
+    if args.camera_num < 0:
         raise Exception("camera_num must be greater than 0!")
+    if get_num_camera_devices() < args.camera_num:
+        raise Exception("camera_num is too high!")
     if check_ratio(args.ear, 0, 1) == False:
         raise Exception("eye aspect ratio must be between 0 - 1")
     if args.microphone_num < 0:
         raise Exception("microphone_num must be greater than 0!")
+    if get_num_microphone_devices() < args.microphone_num:
+        raise Exception("microphone_num is too high!")
     if check_ratio(args.sim_thresh, 0, 1) == False:
         raise Exception("similarity threshold must be between 0 - 1")
 

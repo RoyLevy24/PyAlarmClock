@@ -205,11 +205,14 @@ class LogicManager():
             json.dump(alarm_dict_list, f, ensure_ascii=False, indent=4)
 
     def get_alarm_list_from_file(self):
-        with open(self.data_file_path) as f:
-            alarm_json_list = json.load(f)
-        alarm_list = []
-        for alarm in alarm_json_list:
-            alarm_list.append(self.create_alarm(alarm["alarm_id"], datetime.datetime.strptime(alarm["time"], '%H:%M:%S').time(), alarm["days"], alarm["description"], alarm.get("staring_time", None), alarm.get("num_words", None)))
-        return alarm_list
+        try:
+            with open(self.data_file_path) as f:
+                alarm_json_list = json.load(f)
+            alarm_list = []
+            for alarm in alarm_json_list:
+                alarm_list.append(self.create_alarm(alarm["alarm_id"], datetime.datetime.strptime(alarm["time"], '%H:%M:%S').time(), alarm["days"], alarm["description"], alarm.get("staring_time", None), alarm.get("num_words", None)))
+            return alarm_list
+        except FileNotFoundError:
+            return []
 
 

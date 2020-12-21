@@ -1,6 +1,8 @@
 
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import Screen
+from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.dialog import MDDialog
 from pygame import mixer
 
 
@@ -29,3 +31,25 @@ class AlarmActiveScreen(Screen, FloatLayout):
         """
         mixer.stop()
         mixer.quit()
+
+    def dialog_close(self, *args):
+        """
+        Closes error dialog.
+        """
+        self.error_dialog.dismiss(force=True)
+
+    def show_error_dialog(self, error_str):
+        """
+        Shows an error dialog when an exception is raised for invalid input.
+
+        Args:
+            error_str (String): Error to show in teh dialog.
+        """
+        self.error_dialog = MDDialog(
+            text=error_str,
+            pos_hint={"center_x": .5, "center_y": .5},
+            size_hint_x=.8,
+            buttons=[MDRaisedButton(
+                text="DISCARD", on_press=self.dialog_close)]
+        )
+        self.error_dialog.open()

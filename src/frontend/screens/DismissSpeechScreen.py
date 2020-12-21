@@ -6,16 +6,16 @@ class DismissSpeechScreen(Screen, FloatLayout):
 
     def __init__(self, **kwargs):
         super(DismissSpeechScreen, self).__init__(**kwargs)
-        self.primary_light_color = (0.807843137254902, 0.5764705882352941, 0.8470588235294118, 1.0)
+        self.speech_button = True
 
     def disable_speech_button(self):
-        self.dismiss_speech_record.disabled = True
+        self.speech_button = False
 
     def enable_speech_button(self):
-        self.dismiss_speech_record.disabled = False
+        self.speech_button = True
 
     def is_speech_button_enabled(self):
-        return self.dismiss_speech_record.disabled == False
+        return self.speech_buttonP
 
     def show_speech_fail_snackbar(self):
         """

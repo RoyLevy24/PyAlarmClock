@@ -34,9 +34,15 @@ class SpeechAlarm(Alarm):
         """
         word_recognizer = RecognizeWords.getInstance()
         # getting words details for the words the user needs to speak
-        word_list = word_recognizer.get_word_list(self.num_words)
-        # loads details for first word
-        self.load_word_screen(word_list)
+        try:
+            word_list = word_recognizer.get_word_list(self.num_words)
+            # loads details for first word
+            self.load_word_screen(word_list)
+        except Exception as e:
+            # show error dialog
+            self.main_screen.manager.screens[3].show_error_dialog(str(e))
+            # navigate to next screen
+            super(SpeechAlarm, self).execute_alarm()
 
     def load_word_screen(self, word_list):
         """
@@ -88,17 +94,18 @@ class SpeechAlarm(Alarm):
 
         """
         def mic_on_press():
-            #dismiss_speech_screen.disable_speech_button()
-            # TODO: alert the user to start speaking
-            # user starts to speak
-            is_recognized_word = RecognizeWords.getInstance().recognize_word(word_title, self.mic_num, self.sim_thresh)
-            if is_recognized_word:
-                # moves the user to the next screen
-                next_button_on_press()
-            else:
-                # shows an error message if the user hasn't spoke the word correctly
-                dismiss_speech_screen.show_speech_fail_snackbar()
-            #dismiss_speech_screen.enable_speech_button()
-            
+            if dismiss_speech_screen.is_speech_button_enabled():
+                dismiss_speech_screen.disable_speech_button()
+                # TODO: alert the user to start speaking
+                # user starts to speak
+                is_recognized_word = RecognizeWords.getInstance().recognize_word(
+                    word_title, self.mic_num, self.sim_thresh)
+                dismiss_speech_screen.enable_speech_button()
+                if is_recognized_word:
+                    # moves the user to the next screen
+                    next_button_on_press()
+                else:
+                    # shows an error message if the user hasn't spoke the word correctly
+                    dismiss_speech_screen.show_speech_fail_snackbar()
 
         return mic_on_press
