@@ -36,3 +36,4 @@ def check_ratio(num, lower, upper):
         return lower<=num<=upper
     except Exception:
         return False
+        

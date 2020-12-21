@@ -40,7 +40,7 @@ class RecognizeWords():
             said_word (String): the word said by the user.
             sim_thresh (float): measurement to determine the minimum similarity for the words.
 
-        Returns: 
+        Returns:
             True if the words are similar enough (determined by @sim_thresh).
             False, otherwise.
         """
@@ -60,7 +60,6 @@ class RecognizeWords():
             try:
                 audio = self.recognizer.listen(source, timeout=2, phrase_time_limit=2)
                 # getting the word from the user
-                # TODO: notify the user he can speak
                 said_word = self.recognizer.recognize_google(audio)
                 print(said_word)
                 return self.are_similar_words(actual_word, said_word, sim_thresh)

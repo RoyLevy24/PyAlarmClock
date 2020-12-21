@@ -2,12 +2,10 @@ import weakref
 from datetime import datetime
 
 from frontend.gui_strings import alarm_string
-from kivy.core.window import Window
 from kivy.lang.builder import Builder
 from kivy.properties import ListProperty, ObjectProperty
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import Screen
-from kivymd.app import MDApp
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.picker import MDTimePicker
@@ -160,7 +158,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         """
         Checks if the chosen days by the user is valid.
 
-        Raises: 
+        Raises:
             Exception: If the user have not chosen at least one day.
         """
         if len(days) == 0:
@@ -180,7 +178,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         """
         Checks if the number of words for speech_alarm entered by the user is valid.
 
-        Raises: 
+        Raises:
             Exception: if @num_words is not a non-negative integer or exceeds MAX_NUM_WORDS.
         """
         if not is_positive_int(num_words):
@@ -195,7 +193,7 @@ class AlarmFormScreen(Screen, FloatLayout):
         """
         Checks if the staring time for face_alarm entered by the user is valid.
 
-        Raises: 
+        Raises:
             Exception: if @stare_time is not a non-negative integer or exceeds MAX_STARE_TIME.
         """
         if not is_positive_int(stare_time):

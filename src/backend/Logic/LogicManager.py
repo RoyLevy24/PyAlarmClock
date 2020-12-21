@@ -86,7 +86,7 @@ class LogicManager():
             days (list(int)): days indexes for the days the alarm should ring.
             description (String): description of the alarm.
             staring_time (int): time in seconds the user needs to open his eyes for the alarm to dismiss.
-            num_words (int): number of words the user to pronounce in order to dismiss the alarm.     
+            num_words (int): number of words the user to pronounce in order to dismiss the alarm.  
         """
         alarm = self.create_alarm(
             alarm_id, time, days, description, staring_time, num_words)
@@ -114,7 +114,7 @@ class LogicManager():
             days (list(int)): days indexes for the days the alarm should ring.
             description (String): description of the alarm.
             staring_time (int): time in seconds the user needs to open his eyes for the alarm to dismiss.
-            num_words (int): number of words the user to pronounce in order to dismiss the alarm.     
+            num_words (int): number of words the user to pronounce in order to dismiss the alarm.
         """
         alarm_idx = self.get_alarm_index_by_id(alarm_id)
         if alarm_idx != -1:
@@ -173,7 +173,6 @@ class LogicManager():
             for alarm in self.alarm_list:
                 if self.alarm_should_ring(curr_time, alarm):
                     self.alarms_queue.put(alarm)
-                    time.sleep(60)
 
     def execute_alarm(self):
         """
@@ -181,13 +180,16 @@ class LogicManager():
         Transition the user to dismiss screen, and sets up details for alarm execution.
         """
         while True:
-            alarm = self.alarms_queue.get()
-            alarm_details_dict = {
-                "time": alarm.time.strftime("%H:%M"),
-                "description": alarm.description,
-                "dismiss_func": alarm.execute_alarm,
-            }
-            self.main_screen.load_alarm_active_details(alarm_details_dict)
+            # busy wating if alarm is currently executing
+            if hasattr(self, 'main_screen') and self.main_screen.is_alarm_active == False:
+                alarm = self.alarms_queue.get()
+                alarm_details_dict = {
+                    "time": alarm.time.strftime("%H:%M"),
+                    "description": alarm.description,
+                    "dismiss_func": alarm.execute_alarm,
+                }
+                self.main_screen.load_alarm_active_details(alarm_details_dict)
+                self.main_screen.is_alarm_active = True
 
     def create_serilizable_alarm(self, alarm):
         alarm_dict = alarm.__dict__.copy()
@@ -208,4 +210,5 @@ class LogicManager():
         for alarm in alarm_json_list:
             alarm_list.append(self.create_alarm(alarm["alarm_id"], datetime.datetime.strptime(alarm["time"], '%H:%M:%S').time(), alarm["days"], alarm["description"], alarm.get("staring_time", None), alarm.get("num_words", None)))
         return alarm_list
+
 

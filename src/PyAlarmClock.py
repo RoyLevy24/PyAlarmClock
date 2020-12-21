@@ -9,9 +9,9 @@ sys.path.append("./src/frontend/")
 sys.path.append("./src/backend/")
 sys.path.append("./src/service/")
 
+import argparse
 from service.utils import *
 from frontend.frontend import *
-import argparse
 
 
 class PyAlarmClock():

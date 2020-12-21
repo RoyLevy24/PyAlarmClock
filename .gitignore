@@ -131,3 +131,5 @@ dmypy.json
 # alarms data
 src/data.json
 
+.vscode
+.idea

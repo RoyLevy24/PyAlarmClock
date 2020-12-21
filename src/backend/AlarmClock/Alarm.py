@@ -28,8 +28,23 @@ class Alarm():
         self.main_screen.manager.transition.direction = 'left'
         self.main_screen.manager.current = "main"
 
+    def go_to_today_todo_screen(self):
+        """
+        Navigates the user to the screen with tasks for today.
+        If there are not tasks, navigates to the main screen.
+        """
+        today_todo_screen = self.main_screen.manager.screens[5]
+        self.main_screen.manager.transition.direction = 'left'
+
+        if today_todo_screen.load_today_tasks_screen():
+            self.main_screen.manager.current = "todo"
+        else:
+            self.main_screen.manager.current = "main"
+            self.main_screen.is_alarm_active = False
+
+
     def execute_alarm(self):
         """
         dismisses regular alarm.
         """
-        self.back_to_main_screen()
+        self.go_to_today_todo_screen()

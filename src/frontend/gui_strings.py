@@ -1,5 +1,5 @@
-# This file contains Strings written in KV language
-# The Strings will be used for creating elements such as the Screens of the application.
+"""This file contains Strings written in KV language
+The Strings will be used for creating elements such as the Screens of the application."""
 
 
 screen_helper = """
@@ -9,6 +9,8 @@ ScreenManager:
     AlarmFormScreen:
     AlarmActiveScreen:
     DismissSpeechScreen:
+    TODOScreen:
+    TODOFormScreen:
 
 <EnterScreen>:
     name: 'enter'
@@ -26,13 +28,25 @@ ScreenManager:
             size_hint_y: .6
             allow_stretch: True
 
-        MDRoundFlatButton:
-            id: alarm_active_dismiss
+        MDRectangleFlatButton:
+            id: alarms_screen
             text: "Go to Alarms"
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             font_size: '40sp'
-            on_press: root.manager.current = 'main'
-
+            size: 100,50
+            on_press: root.navigate_to_alarms()
+        
+        Label:
+            size_hint_y: .025
+        
+        MDRectangleFlatButton:
+            id: todos_screens
+            text: "Go to TODO"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            font_size: '40sp'
+            size: 100,50
+            on_press: root.navigate_to_todos()
+        
         Label:
             size_hint_y: .2
 
@@ -44,6 +58,7 @@ ScreenManager:
             title: "Alarms"
             pos_hint: {"top": 1}
             elevation: 11
+            left_action_items: [["arrow-left", lambda x: root.go_back_to_enter()]]
             right_action_items: [["plus", lambda x: root.create_alarm()]]
 
 
@@ -51,6 +66,64 @@ ScreenManager:
             id: scroll
             MDList:
                 id: list
+
+<TODOScreen>:
+    name: 'todo'
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDToolbar:
+            id: todo_toolbar
+            title: "TODO Tasks"
+            pos_hint: {"top": 1}
+            elevation: 11
+            left_action_items: [["arrow-left", lambda x: root.go_back_to_enter()]]
+            right_action_items: [["plus", lambda x: root.navigate_todo_form()]]
+            
+        ScrollView:
+            id: scroll
+            MDList:
+                id: list
+
+<TODOFormScreen>
+    name: 'todo_form'
+
+    form_toolbar: form_toolbar
+    date_picker: date_picker
+    todo_desc: todo_desc
+
+    MDToolbar:
+        id: form_toolbar
+        title: "Add TODO"
+        pos_hint: {"top": 1}
+        elevation: 11
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        spacing: 30
+        size_hint_y: 0.01
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+        MDRectangleFlatIconButton:
+            id: date_picker
+            icon: "calendar"
+            font_size: '40sp'
+            height: dp(60)
+            width: dp(250)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            on_press: root.open_date_picker()
+
+        MDTextField:
+            id: todo_desc
+            size_hint_x: .8
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            hint_text: "Enter Description"
+            multiline: True
+    
+    MDToolbar:
+        pos_hint: {"bottom": 1}
+        elevation: 11
+        right_action_items: [["check", lambda x: root.add_todo()]]
+        left_action_items: [["close", lambda x: root.back_to_todo_list()]]
 
 <AlarmFormScreen>:
     name: 'alarm_form'
@@ -382,4 +455,18 @@ ThreeLineAvatarIconListItem:
     IconRightWidget:
         icon: "delete"
         on_release: app.root.screens[1].show_delete_alarm_dialog(root.name)
+"""
+
+
+todo_string = """
+TODOListItemText:
+    markup: True
+    font_style: "H6"
+    secondary_font_style: "Subtitle2"
+
+    LeftCheckbox:
+
+    IconRightWidget:
+        icon: "delete"
+        on_release: app.root.screens[5].delete_todo(root.name)
 """

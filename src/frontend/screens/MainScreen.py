@@ -1,12 +1,7 @@
 from datetime import datetime
 
-from frontend.gui_strings import screen_helper
-from kivy.core.window import Window
-from kivy.lang.builder import Builder
-from kivy.properties import ListProperty, ObjectProperty
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import Screen, ScreenManager
-from kivymd.app import MDApp
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.picker import MDTimePicker
@@ -23,6 +18,11 @@ class MainScreen(Screen, FloatLayout):
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
         self.alarm_list = []
+        self.is_alarm_active = False
+
+    def go_back_to_enter(self):
+        self.manager.transition.direction = 'right'
+        self.manager.current = 'enter'
 
     def set_logic_manager(self, logic_manager):
         self.logic_manager = logic_manager
@@ -93,7 +93,7 @@ class MainScreen(Screen, FloatLayout):
         """
         self.delete_dialog = MDDialog(
             title="Delete Alarm?",
-            text="This alarm we no longer be active",
+            text="This alarm will no longer be active",
             pos_hint={"center_x": .5, "center_y": .5},
             size_hint_x=.8,
             buttons=[

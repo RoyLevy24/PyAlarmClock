@@ -13,3 +13,4 @@ beautifulsoup4
 difflib
 urlib
 playsound
+speech recognition

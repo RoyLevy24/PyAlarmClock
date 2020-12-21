@@ -30,13 +30,12 @@ class OpenEyesDetect():
         """
         Creates OpenEyesDetect instance if not already exists.
         """
-        if OpenEyesDetect.__instance != None:
+        if OpenEyesDetect.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
             # set up path for face landmarks predictor
             pred_path = "backend/OpenEyesDetection/face_landmarks_predictor.dat"
             self.PREDICTOR_PATH = pred_path
-            print(self.PREDICTOR_PATH)
             OpenEyesDetect.__instance = self
 
     def get_frames_per_seconds(self, camera_num):
@@ -51,7 +50,7 @@ class OpenEyesDetect():
         num_frames = 60
 
         start = time.time()
-        for i in range(0, num_frames):
+        for _ in range(0, num_frames):
             ret, frame = video.read()
         end = time.time()
 
@@ -95,7 +94,6 @@ class OpenEyesDetect():
         open_eyes_frames_num = 0
 
         # getting detector and predictor objects from dlib
-        # TODO: add a try catch here
         detector = dlib.get_frontal_face_detector()
         predictor = dlib.shape_predictor(self.PREDICTOR_PATH)
 
@@ -146,8 +144,8 @@ class OpenEyesDetect():
 
                 # increment the frames the user opened his eyes if the
                 # computed ear >= ear_threshold
-                if (ear >= ear_threshold):
-                    if (open_eyes_frames_num <= consec_frames_threshold):
+                if ear >= ear_threshold:
+                    if open_eyes_frames_num <= consec_frames_threshold:
                         open_eyes_frames_num += 1
 
                 cv2.putText(frame, "FR_OPEN_EYES: {}".format(open_eyes_frames_num), (10, 30),

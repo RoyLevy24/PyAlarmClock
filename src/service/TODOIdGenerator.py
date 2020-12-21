@@ -1,6 +1,6 @@
-class AlarmIdGenerator():
+class TODOIdGenerator():
     """
-    This class represents a generator of ids for alarm clocks.
+    This class represents a generator of ids for todo tasks.
     """
 
     __instance = None
@@ -8,21 +8,21 @@ class AlarmIdGenerator():
     @staticmethod
     def getInstance():
         """
-        Creating a new AlarmIdGenerator if not already exists.
-        Returns the instance of AlarmIdGenerator.
+        Creating a new TODOIdGenerator if not already exists.
+        Returns the instance of TODOIdGenerator.
         """
-        if AlarmIdGenerator.__instance == None:
-            AlarmIdGenerator()
-        return AlarmIdGenerator.__instance
+        if TODOIdGenerator.__instance == None:
+            TODOIdGenerator()
+        return TODOIdGenerator.__instance
 
     def __init__(self):
         """
-        Creating a new AlarmIdGenerator if not already exists.
+        Creating a new TODOIdGenerator if not already exists.
         """
-        if AlarmIdGenerator.__instance != None:
+        if TODOIdGenerator.__instance != None:
             raise Exception("This class is a singleton!")
         else:
-            AlarmIdGenerator.__instance = self
+            TODOIdGenerator.__instance = self
             # setting up id generator
             self.gen = self.create_id_generator()
 
@@ -34,10 +34,10 @@ class AlarmIdGenerator():
         while True:
             num = i
             i += 1
-            yield f'alarm_id_{num}'
+            yield f'todo_id_{num}'
 
     def get_next_id(self):
         """
-        Returns the next alarm clock id in the generator.
+        Returns the next todo task id in the generator.
         """
         return next(self.gen)

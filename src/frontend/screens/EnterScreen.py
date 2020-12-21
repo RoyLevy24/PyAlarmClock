@@ -7,4 +7,15 @@ class EnterScreen(Screen, FloatLayout):
     """
 
     def __init__(self, **kwargs):
+        """Creates a new Enter Screen"""
         super(EnterScreen, self).__init__(**kwargs)
+
+    def navigate_to_alarms(self):
+        """Navigates the user to alarms screen"""
+        self.manager.transition.direction = 'left'
+        self.manager.current = 'main'
+    
+    def navigate_to_todos(self):
+        """Navigates the user to TODO tasks screen"""
+        self.manager.transition.direction = 'left'
+        self.manager.current = 'todo'
