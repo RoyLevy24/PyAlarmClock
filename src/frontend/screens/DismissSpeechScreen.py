@@ -15,7 +15,7 @@ class DismissSpeechScreen(Screen, FloatLayout):
         self.speech_button = True
 
     def is_speech_button_enabled(self):
-        return self.speech_buttonP
+        return self.speech_button
 
     def show_speech_fail_snackbar(self):
         """

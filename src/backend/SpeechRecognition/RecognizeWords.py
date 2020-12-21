@@ -64,6 +64,7 @@ class RecognizeWords():
                 print(said_word)
                 return self.are_similar_words(actual_word, said_word, sim_thresh)
             except Exception as e:
+                print("not recognized")
                 return False
 
     def get_word_list(self, num_words):
