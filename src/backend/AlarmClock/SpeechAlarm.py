@@ -88,17 +88,17 @@ class SpeechAlarm(Alarm):
 
         """
         def mic_on_press():
-            dismiss_speech_screen.disable_speech_button()
+            #dismiss_speech_screen.disable_speech_button()
             # TODO: alert the user to start speaking
             # user starts to speak
             is_recognized_word = RecognizeWords.getInstance().recognize_word(word_title, self.mic_num, self.sim_thresh)
-            dismiss_speech_screen.enable_speech_button()
             if is_recognized_word:
                 # moves the user to the next screen
-                return next_button_on_press()
+                next_button_on_press()
             else:
                 # shows an error message if the user hasn't spoke the word correctly
-                # dismiss_speech_screen.show_speech_fail_snackbar()
-                return lambda: None
+                dismiss_speech_screen.show_speech_fail_snackbar()
+            #dismiss_speech_screen.enable_speech_button()
+            
 
         return mic_on_press

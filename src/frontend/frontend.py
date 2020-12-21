@@ -50,6 +50,6 @@ class AlarmApp(MDApp):
         # create the main screen Widget
         screen_manager = Builder.load_string(screen_helper)
         main_screen = screen_manager.screens[1]
-        logic_manger = LogicManager(self.args)
+        logic_manger = LogicManager(self.args, main_screen)
         main_screen.set_logic_manager(logic_manger)
         return screen_manager

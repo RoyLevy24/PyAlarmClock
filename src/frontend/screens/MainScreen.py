@@ -4,6 +4,11 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.picker import MDTimePicker
+from frontend.gui_strings import alarm_string
+from service.utils import *
+import weakref
+from kivy.lang.builder import Builder
 
 
 class MainScreen(Screen, FloatLayout):
@@ -22,7 +27,9 @@ class MainScreen(Screen, FloatLayout):
 
     def set_logic_manager(self, logic_manager):
         self.logic_manager = logic_manager
-        self.logic_manager.set_main_screen(self)
+        self.alarm_list = [self.get_alarm_dict(alarm) for alarm in logic_manager.alarm_list]
+        self.set_alarm_widget_list()
+        
 
     def find_alarm_by_id(self, alarm_list, alarm_id):
         """
@@ -146,3 +153,59 @@ class MainScreen(Screen, FloatLayout):
             alarm_active_screen.stop_alarm_ringtone()
             dismiss_func()
         return dismiss
+
+    def set_alarm_item_details(self, alarm_item, alarm_dict, days_str):
+        """
+        Sets the alarm details from the form in a Widget that later
+        displayed on the main screen.
+
+        Args:
+            alarm_item (Widget): list item that displayed on the main screen 
+        """
+        alarm_item.name = alarm_dict["alarm_id"]
+        alarm_item.text = alarm_dict["time"].strftime("%H:%M")
+        alarm_item.secondary_text = alarm_dict["description"]
+        alarm_item.tertiary_text = days_str
+
+    def add_alarm_in_main(self, alarm_dict, add_to_list=False):
+        """
+        Adds an alarm to the main screen
+
+        Args:
+            alarm_dict (dict): dictionary contaning the alarm's details.
+        """
+        #main_screen = self.manager.screens[1]
+        # getting a string represanting alarm days
+        days_str = get_days_str(alarm_dict["days"])
+        alarm_id = alarm_dict["alarm_id"]
+
+        # Loading an alarm_item Kivy Widget
+        alarm_item = Builder.load_string(alarm_string)
+        self.set_alarm_item_details(alarm_item, alarm_dict, days_str)
+
+        # adds the alarm to list in the main screen
+        if(add_to_list):
+            self.alarm_list.append(alarm_dict)
+        # adds the alarm to the list view in the main screen
+        self.ids.list.add_widget(alarm_item)
+        # holding up a reference for the alarm widget for deletion
+        self.ids[alarm_id] = weakref.proxy(alarm_item)
+
+    def set_alarm_widget_list(self):
+        for alarm in self.alarm_list:
+            self.add_alarm_in_main(alarm)
+
+    def get_alarm_type(self, alarm):
+        staring_time = alarm.get("staring_time", None)
+        num_words = alarm.get("num_words", None)
+        if num_words != None:
+            return (0, num_words)
+        elif staring_time != None:
+            return (1, staring_time)
+        else:
+            return (2, None)
+    
+    def get_alarm_dict(self, alarm):
+        alarm_dict = alarm.__dict__
+        alarm_dict["alarm_type"] = self.get_alarm_type(alarm_dict)
+        return alarm_dict

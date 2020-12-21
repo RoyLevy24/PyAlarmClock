@@ -2,6 +2,7 @@ import datetime
 import queue
 import threading
 import time
+import json
 
 from backend.AlarmClock.Alarm import *
 from backend.AlarmClock.OpenEyesAlarm import *
@@ -12,8 +13,8 @@ class LogicManager():
     """
     This class represents main logic bridge between the GUI and domain components.
     """
-
-    def __init__(self, args):
+    
+    def __init__(self, args, main_screen):
         """
         Creates a new LogicManager
 
@@ -21,9 +22,12 @@ class LogicManager():
             args: command line arguments.
         """
         self.args = args
-        self.alarm_list = []
+        self.main_screen = main_screen
+        self.data_file_path = "data.json"
+        self.alarm_list = self.get_alarm_list_from_file()
         self.alarms_queue = queue.Queue()
         self.init_threads()
+
 
     def set_main_screen(self, main_screen):
         self.main_screen = main_screen
@@ -87,6 +91,7 @@ class LogicManager():
         alarm = self.create_alarm(
             alarm_id, time, days, description, staring_time, num_words)
         self.alarm_list.append(alarm)
+        self.write_alarms_to_file()
 
     def delete_alarm(self, alarm_id):
         """
@@ -97,6 +102,7 @@ class LogicManager():
         """
         self.alarm_list = list(
             filter(lambda alarm: alarm.alarm_id != alarm_id, self.alarm_list))
+        self.write_alarms_to_file()
 
     def edit_alarm(self, alarm_id, time, days, description, staring_time=None, num_words=None):
         """
@@ -115,6 +121,7 @@ class LogicManager():
             # creates a new alarm instead of the old one with the params given
             self.alarm_list[alarm_idx] = self.create_alarm(
                 alarm_id, time, days, description, staring_time, num_words)
+            self.write_alarms_to_file()
 
     def get_alarm_index_by_id(self, alarm_id):
         """
@@ -184,3 +191,25 @@ class LogicManager():
                 }
                 self.main_screen.load_alarm_active_details(alarm_details_dict)
                 self.main_screen.is_alarm_active = True
+
+    def create_serilizable_alarm(self, alarm):
+        alarm_dict = alarm.__dict__.copy()
+        alarm_dict['time'] = str(alarm_dict['time'])
+        del alarm_dict['main_screen']
+        return alarm_dict
+
+    def write_alarms_to_file(self):
+        alarm_dict_list = [self.create_serilizable_alarm(alarm) for alarm in self.alarm_list]
+        with open(self.data_file_path, 'w', encoding='utf-8') as f:
+            f.seek(0)
+            json.dump(alarm_dict_list, f, ensure_ascii=False, indent=4)
+
+    def get_alarm_list_from_file(self):
+        with open(self.data_file_path) as f:
+            alarm_json_list = json.load(f)
+        alarm_list = []
+        for alarm in alarm_json_list:
+            alarm_list.append(self.create_alarm(alarm["alarm_id"], datetime.datetime.strptime(alarm["time"], '%H:%M:%S').time(), alarm["days"], alarm["description"], alarm.get("staring_time", None), alarm.get("num_words", None)))
+        return alarm_list
+
+

@@ -58,7 +58,7 @@ class RecognizeWords():
             # setting up microphone for speech
             self.recognizer.adjust_for_ambient_noise(source)
             try:
-                audio = self.recognizer.listen(source)
+                audio = self.recognizer.listen(source, timeout=2, phrase_time_limit=2)
                 # getting the word from the user
                 said_word = self.recognizer.recognize_google(audio)
                 print(said_word)

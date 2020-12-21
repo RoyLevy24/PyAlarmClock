@@ -128,5 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# alarms data
+src/data.json
+
 .vscode
 .idea
