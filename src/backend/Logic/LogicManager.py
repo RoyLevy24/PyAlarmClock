@@ -173,6 +173,7 @@ class LogicManager():
         Transition the user to dismiss screen, and sets up details for alarm execution.
         """
         while True:
+            time.sleep(0.001)
             # busy wating if alarm is currently executing
             if hasattr(self, 'main_screen') and self.main_screen.is_alarm_active == False:
                 alarm = self.alarms_queue.get()
