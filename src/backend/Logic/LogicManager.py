@@ -193,18 +193,36 @@ class LogicManager():
                 self.main_screen.is_alarm_active = True
 
     def create_serilizable_alarm(self, alarm):
+        """
+        creates dictionary represanting the alarm object
+
+        Args:
+            alarm (Alarm): an alarm clock to create the dictionary from.
+        
+        Returns: a dictionary represanting the alarm object.
+
+        """
         alarm_dict = alarm.__dict__.copy()
         alarm_dict['time'] = str(alarm_dict['time'])
         del alarm_dict['main_screen']
         return alarm_dict
 
     def write_alarms_to_file(self):
+        """
+        saves the alarm list to the json file
+        """
         alarm_dict_list = [self.create_serilizable_alarm(alarm) for alarm in self.alarm_list]
         with open(self.data_file_path, 'w', encoding='utf-8') as f:
             f.seek(0)
             json.dump(alarm_dict_list, f, ensure_ascii=False, indent=4)
 
     def get_alarm_list_from_file(self):
+        """
+        Read the alarm list from the json file
+        
+        Returns: a list of Alarm objects
+
+        """
         try:
             with open(self.data_file_path) as f:
                 alarm_json_list = json.load(f)
