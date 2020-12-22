@@ -1,0 +1,12 @@
+kivymd==0.104.1
+playsound==1.2.2
+pygame==2.0.0
+imutils==0.5.3
+dlib==19.21.0
+Kivy==2.0.0rc4
+scipy==1.5.4
+SpeechRecognition==3.8.1
+opencv_python==4.4.0.46
+beautifulsoup4==4.9.3
+numpy==1.19.3
+PyAudio==0.2.11

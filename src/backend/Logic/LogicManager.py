@@ -20,6 +20,7 @@ class LogicManager():
 
         Args:
             args: command line arguments.
+            main_screens: alarms main screen.
         """
         self.args = args
         self.main_screen = main_screen
