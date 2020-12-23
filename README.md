@@ -1,6 +1,6 @@
 # PyAlarmClock
 
-Welcome to PyAlarmClock<br><br>This is a python based alarm clock that uses face and speech recognition in order to turn of alarms.
+Welcome to PyAlarmClock<br><br>This is a python based alarm clock that uses face and speech recognition in order to turn off alarms.
 
 ### Installation
 ---
