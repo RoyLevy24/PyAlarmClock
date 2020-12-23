@@ -9,7 +9,7 @@ Welcome to PyAlarmClock<br><br>This is a python based alarm clock that uses face
 3. Navigate to the main folder contaning requirements.txt (PyAlarmClock).
 4. Open up a terminal in the current folder.
 5. First, install cmake using pip by typing the following command: ***pip install cmake==3.18.4.post1***
-6. Second, install all the requirements using pip by typing the following command: pip install -r requirements.txt
+6. Second, install all the requirements using pip by typing the following command: ***pip install -r requirements.txt***
 
 ### Troubleshooting
 ---
